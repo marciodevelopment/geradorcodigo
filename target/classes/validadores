@@ -1,0 +1,5 @@
+NotNull;javax.validation.constraints.NotNull
+Min;javax.validation.constraints.NotNull
+Max;javax.validation.constraints.MAX 
+NotEmpty;javax.validation.constraints.MAX 
+

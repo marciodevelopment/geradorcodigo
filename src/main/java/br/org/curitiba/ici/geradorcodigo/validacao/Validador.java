@@ -9,7 +9,8 @@ public enum Validador {
 	NOT_NULL("NotNull"),
 	MIN("Min"),
 	MAX("Max"),
-	NOT_EMPTY("NotEmpty");
+	NOT_EMPTY("NotEmpty"),
+	SIZE("Size");
 
 	@Getter
 	private String validador;

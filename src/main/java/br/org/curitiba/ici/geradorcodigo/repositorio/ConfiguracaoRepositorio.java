@@ -13,7 +13,7 @@ public class ConfiguracaoRepositorio implements ArquivoFinal {
 	private String getCodigoRepositorio() {
 		return
 				getTemplate()
-				.replace("nomePacote_Entidade", nomePacote + "." + nomeEntidade + Constantes.NOME_PACOTE_ENTIDADE)
+				.replace("nomePacote_Entidade", nomePacote + "." + Constantes.NOME_PACOTE_ENTIDADE + ".nomeEntidade")
 				.replace("nomePacote", nomePacote + "." + Constantes.NOME_PACOTE_REPOSTITORIO)
 				.replace("nomeEntidade", nomeEntidade + Constantes.NOME_FINAL_ENTIDADE)
 				.replace("nomeRepositorio", nomeEntidade + Constantes.NOME_FINAL_REPOSITORIO);

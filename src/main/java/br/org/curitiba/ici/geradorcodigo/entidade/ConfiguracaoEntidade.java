@@ -23,7 +23,7 @@ public class ConfiguracaoEntidade implements ArquivoFinal {
 		String templateClasse = getTemplateClasse();
 		return
 				templateClasse
-				.replace("nomePacote", nomePacote)
+				.replace("nomePacote", nomePacote + "." + Constantes.NOME_PACOTE_ENTIDADE)
 				.replace("imports", this.getCodigoImports())
 				.replace("nomeTabela", nomeTabela)
 				.replace("nomeEntidade", nomeEntidade + Constantes.NOME_FINAL_ENTIDADE)
@@ -32,9 +32,9 @@ public class ConfiguracaoEntidade implements ArquivoFinal {
 
 	private String getTemplateClasse() {
 		return
-				"package nomePacote \n" +
+				"package nomePacote; \n" +
 				"imports\n\n" + 
-				"@Getter\n" +
+				"@Data\n" +
 				"@Entity\n" +
 				"@Table(name = \"nomeTabela\")\n" +
 				"public class nomeEntidade {\n" +
@@ -75,9 +75,8 @@ public class ConfiguracaoEntidade implements ArquivoFinal {
 
 	private HashSet<String> getImportsEntidade() {
 		HashSet<String> imports = new HashSet<>();
-		imports.add("lombok.Getter");
+		imports.add("lombok.Data");
 		imports.add("javax.persistence.Table");
-		imports.add("lombok.Getter");
 		imports.add("javax.persistence.Entity");
 		return imports;
 	}

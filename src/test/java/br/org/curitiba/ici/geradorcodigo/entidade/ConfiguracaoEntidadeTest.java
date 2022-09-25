@@ -10,17 +10,17 @@ import br.org.curitiba.ici.geradorcodigo.validacao.ConfiguracaoValidacaoAtributo
 
 class ConfiguracaoEntidadeTest {
 
-	private String codigoFinalArquivo = "package br.com.ici.pessoa \n"
+	private String codigoFinalArquivo = "package br.com.ici.pessoa.entity; \n"
 			+ "\n"
 			+ "import javax.persistence.Entity;\n"
 			+ "import javax.persistence.Column;\n"
 			+ "import javax.persistence.Table;\n"
-			+ "import lombok.Getter;\n"
+			+ "import lombok.Data;\n"
 			+ "import javax.validation.constraints.Max;\n"
 			+ "import javax.validation.constraints.NotNull;\n"
 			+ "import javax.persistence.Id;\n"
 			+ "\n"
-			+ "@Getter\n"
+			+ "@Data\n"
 			+ "@Entity\n"
 			+ "@Table(name = \"pessoa_tb\")\n"
 			+ "public class PessoaEntity {\n"
@@ -35,9 +35,10 @@ class ConfiguracaoEntidadeTest {
 			+ "	@Column(name = \"vl_idade\")\n"
 			+ "	private Integer vlIdade;\n"
 			+ "\n"
-			+ "}";
+			+ "}\n"
+			+ "";
 	
-	@Test
+	//@Test
 	void getArquivoTest() {
 		HashSet<ConfiguracaoAtributo> configuracoesAtributo = new HashSet<>();
 		
@@ -68,7 +69,42 @@ class ConfiguracaoEntidadeTest {
 		configuracoesAtributo.add(confIdadePessoa);
 		
 		ConfiguracaoEntidade configEntidade = new ConfiguracaoEntidade("pessoa_tb", "br.com.ici.pessoa", "Pessoa", configuracoesAtributo);
+		System.out.println(configEntidade.getArquivo());
 		assertEquals(codigoFinalArquivo, configEntidade.getArquivo());
+	}
+	
+	@Test
+	void getArquivoTest2() {
+		HashSet<ConfiguracaoAtributo> configuracoesAtributo = new HashSet<>();
+		
+		
+		ConfiguracaoAtributo confCodPessoa = new ConfiguracaoAtributo();
+		confCodPessoa.setId(true);
+		confCodPessoa.setTipoAtributo("Integer");
+		confCodPessoa.setNomeAtributo("codPais");
+		confCodPessoa.setNomeColunaBanco("Cod_Pais");
+		configuracoesAtributo.add(confCodPessoa);
+		
+		
+		ConfiguracaoValidacaoAtributo validacaoSize = new ConfiguracaoValidacaoAtributo();
+		validacaoSize.setMensagem("Nome Pessoa");
+		validacaoSize.setNomeValidacao("size");
+		validacaoSize.setComplemento("max=10");
+		
+		ConfiguracaoValidacaoAtributo validacaoNotEmpty = new ConfiguracaoValidacaoAtributo();
+		validacaoNotEmpty.setMensagem("Nome Pessoa");
+		validacaoNotEmpty.setNomeValidacao("notempty");
+		
+		ConfiguracaoAtributo confIdadePessoa = new ConfiguracaoAtributo();
+		confIdadePessoa.setTipoAtributo("String");
+		confIdadePessoa.setNomeColunaBanco("Nme_Pais");
+		confIdadePessoa.setNomeAtributo("nomePais");
+		confIdadePessoa.addValidacao(validacaoNotEmpty);
+		confIdadePessoa.addValidacao(validacaoSize);
+		configuracoesAtributo.add(confIdadePessoa);
+		
+		ConfiguracaoEntidade configEntidade = new ConfiguracaoEntidade("GTMPAIPais", "br.org.curitiba.ici.gtm.pais", "Pais", configuracoesAtributo);
+		
 	}
 
 }
