@@ -42,28 +42,16 @@ class ConfiguracaoEntidadeTest {
 	void getArquivoTest() {
 		HashSet<ConfiguracaoAtributo> configuracoesAtributo = new HashSet<>();
 		
-		ConfiguracaoValidacaoAtributo validacaoNotNull = new ConfiguracaoValidacaoAtributo();
-		validacaoNotNull.setMensagem("mensagem notnull");
-		validacaoNotNull.setNomeValidacao("notnull");
+		ConfiguracaoValidacaoAtributo validacaoNotNull = new ConfiguracaoValidacaoAtributo("notnull", "mensagem notnull", null); 
 		
-		ConfiguracaoValidacaoAtributo validacaoMax = new ConfiguracaoValidacaoAtributo();
-		validacaoMax.setMensagem("mensagem max");
-		validacaoMax.setNomeValidacao("max");
-		validacaoMax.setComplemento("value=10");
+		ConfiguracaoValidacaoAtributo validacaoMax = new ConfiguracaoValidacaoAtributo("max", "mensagem max", "value=10");
 		
-		
-		ConfiguracaoAtributo confCodPessoa = new ConfiguracaoAtributo();
-		confCodPessoa.setId(true);
-		confCodPessoa.setTipoAtributo("Integer");
-		confCodPessoa.setNomeAtributo("codPessoa");
-		confCodPessoa.setNomeColunaBanco("cod_pessoa");
+		ConfiguracaoAtributo confCodPessoa = new ConfiguracaoAtributo(true, "cod_pessoa", "codPessoa", "Integer");
 		confCodPessoa.addValidacao(validacaoNotNull);
 		configuracoesAtributo.add(confCodPessoa);
 		
-		ConfiguracaoAtributo confIdadePessoa = new ConfiguracaoAtributo();
-		confIdadePessoa.setTipoAtributo("Integer");
-		confIdadePessoa.setNomeAtributo("vlIdade");
-		confIdadePessoa.setNomeColunaBanco("vl_idade");
+		ConfiguracaoAtributo confIdadePessoa = new ConfiguracaoAtributo(false, "vl_idade", "vlIdade", "Integer");
+		
 		confIdadePessoa.addValidacao(validacaoNotNull);
 		confIdadePessoa.addValidacao(validacaoMax);
 		configuracoesAtributo.add(confIdadePessoa);
@@ -73,38 +61,32 @@ class ConfiguracaoEntidadeTest {
 		assertEquals(codigoFinalArquivo, configEntidade.getArquivo());
 	}
 	
-	@Test
+	//@Test
 	void getArquivoTest2() {
 		HashSet<ConfiguracaoAtributo> configuracoesAtributo = new HashSet<>();
 		
 		
-		ConfiguracaoAtributo confCodPessoa = new ConfiguracaoAtributo();
-		confCodPessoa.setId(true);
-		confCodPessoa.setTipoAtributo("Integer");
-		confCodPessoa.setNomeAtributo("codPais");
-		confCodPessoa.setNomeColunaBanco("Cod_Pais");
+		ConfiguracaoAtributo confCodPessoa = new ConfiguracaoAtributo(true, "Cod_Pais", "codPais", "Integer");
 		configuracoesAtributo.add(confCodPessoa);
 		
 		
-		ConfiguracaoValidacaoAtributo validacaoSize = new ConfiguracaoValidacaoAtributo();
-		validacaoSize.setMensagem("Nome Pessoa");
-		validacaoSize.setNomeValidacao("size");
-		validacaoSize.setComplemento("max=10");
+		ConfiguracaoValidacaoAtributo validacaoSize = new ConfiguracaoValidacaoAtributo("size", "Nome Pessoa", "max=10");
 		
-		ConfiguracaoValidacaoAtributo validacaoNotEmpty = new ConfiguracaoValidacaoAtributo();
-		validacaoNotEmpty.setMensagem("Nome Pessoa");
-		validacaoNotEmpty.setNomeValidacao("notempty");
+		ConfiguracaoValidacaoAtributo validacaoNotEmpty = new ConfiguracaoValidacaoAtributo("notempty", "Nome Pessoa", null);
 		
-		ConfiguracaoAtributo confIdadePessoa = new ConfiguracaoAtributo();
-		confIdadePessoa.setTipoAtributo("String");
-		confIdadePessoa.setNomeColunaBanco("Nme_Pais");
-		confIdadePessoa.setNomeAtributo("nomePais");
+		ConfiguracaoAtributo confIdadePessoa = new ConfiguracaoAtributo(false, "Nme_Pais", "nomePais", "String");
 		confIdadePessoa.addValidacao(validacaoNotEmpty);
 		confIdadePessoa.addValidacao(validacaoSize);
 		configuracoesAtributo.add(confIdadePessoa);
-		
 		ConfiguracaoEntidade configEntidade = new ConfiguracaoEntidade("GTMPAIPais", "br.org.curitiba.ici.gtm.pais", "Pais", configuracoesAtributo);
 		
 	}
+
+	@Test
+	void getPastaTest() {
+		ConfiguracaoEntidade configEntidade = new ConfiguracaoEntidade("GTMPAIPais", "br.org.curitiba.ici.gtm.pais", "Pais", null);
+		assertEquals("br.org.curitiba.ici.gtm.pais.entity.PaisEntity.java" , configEntidade.getPasta());
+	}
+	
 
 }

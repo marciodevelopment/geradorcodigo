@@ -14,7 +14,7 @@ public class ConfiguracaoModelAssember implements ArquivoFinal {
 		return
 				getTemplate()
 				.replace("nomePacote", nomePacote)
-				.replace("hateoasPacote", Constantes.NOME_PACOTE_HATEOAS)
+				.replace("hateoasPacote", getHateosPacote())
 				.replace("codigoEntidade", nomeEntidade + Constantes.NOME_FINAL_ENTIDADE)
 				.replace("nomeEntidade", nomeEntidade)
 				.replace("variavelEntidade", variavelEntidade)
@@ -22,14 +22,14 @@ public class ConfiguracaoModelAssember implements ArquivoFinal {
 				.replace("pacoteResponse", Constantes.NOME_PACOTE_RESPONSE)
 				.replace("pacoteController", Constantes.NOME_PACOTE_CONTROLLER)
 				.replace("entidadePacote", Constantes.NOME_PACOTE_ENTIDADE);
+	}
 
-		/*
-		.replace("pacoteRequest", Constantes.NOME_PACOTE_REQUEST)
-		.replace("nome_Pacote_Entidade", Constantes.NOME_PACOTE_ENTIDADE)
-		.replace("nomeServico", nomeServico)
-		.replace("variavelServico", variavelServico)
-		.replace("servicoPacote", Constantes.NOME_PACOTE_SERVICO);
-		 */
+	private String getNomeClasse() {
+		return this.nomeEntidade + Constantes.NOME_FINAL_MODEL_ASSEMBLER;
+	}
+	
+	private String getHateosPacote() {
+		return Constantes.NOME_PACOTE_HATEOAS;
 	}
 
 	@Override
@@ -40,7 +40,7 @@ public class ConfiguracaoModelAssember implements ArquivoFinal {
 
 	@Override
 	public String getPasta() {
-		return null;
+		return this.nomePacote + "." + getHateosPacote() + "." + getNomeClasse() + ".java";
 	}
 
 	private String getTemplate() {
@@ -84,6 +84,7 @@ public class ConfiguracaoModelAssember implements ArquivoFinal {
 				+ "		variavelEntidadeResponse.add(\n"
 				+ "				getSelfLink(entity.getCodnomeEntidade()));\n"
 				+ "		\n"
+				+ "		// TODO: verificar nome no plural.\n"
 				+ "		variavelEntidadeResponse.add(getSelfLinkPesquisa().withRel(\"variavelEntidades\"));\n"
 				+ "		return variavelEntidadeResponse;\n"
 				+ "	}\n"

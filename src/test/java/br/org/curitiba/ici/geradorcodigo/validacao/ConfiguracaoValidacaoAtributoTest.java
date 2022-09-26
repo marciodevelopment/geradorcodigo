@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 
 class ConfiguracaoValidacaoAtributoTest {
 
+	/*
 	@Test
 	void testGerarConfiguacaoGerarApenasAnotacaoTest() {
 		ConfiguracaoValidacaoAtributo configuracao = new ConfiguracaoValidacaoAtributo();
@@ -52,7 +53,7 @@ class ConfiguracaoValidacaoAtributoTest {
 		String expected = "import javax.validation.constraints.Max";
 		assertEquals(expected, configuracao.gerarConfiguacao().getImportsGerado().iterator().next());
 	}
-	
+	*/
 	
 
 }

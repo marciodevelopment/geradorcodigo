@@ -7,14 +7,16 @@ import java.util.List;
 import br.org.curitiba.ici.geradorcodigo.common.Configuracao;
 import br.org.curitiba.ici.geradorcodigo.common.LinhaCodigoImplementada;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
+@RequiredArgsConstructor
 @Data
 public class ConfiguracaoAtributo implements Configuracao {
-	private boolean id;
-	private String nomeColunaBanco;
-	private String nomeAtributo;
-	private String tipoAtributo;
+	private final boolean id;
+	private final String nomeColunaBanco;
+	private final String nomeAtributo;
+	private final String tipoAtributo;
 	private List<String> codigos  = new ArrayList<>();
 	private HashSet<String> imports  = new HashSet<>();
 	
@@ -29,6 +31,7 @@ public class ConfiguracaoAtributo implements Configuracao {
 	private List<String> getCodigoGerado() {
 		carregarCodigosValidacoes();
 		if (id) {
+			codigos.add("@GeneratedValue(strategy = GenerationType.IDENTITY)");
 			codigos.add("@Id");
 		}
 		codigos.add("@Column(name = \"" + nomeColunaBanco + "\")");
@@ -52,6 +55,8 @@ public class ConfiguracaoAtributo implements Configuracao {
 		carregarImportsValidacoes();
 		if (id) {
 			imports.add("javax.persistence.Id");
+			imports.add("javax.persistence.GeneratedValue");
+			imports.add("javax.persistence.GenerationType");
 		}
 		imports.add("javax.persistence.Column");
 		return imports;

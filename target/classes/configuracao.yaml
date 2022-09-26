@@ -1,0 +1,45 @@
+pastaArquivos: /home/marcio/Desktop/arquivos-gerador
+pacote: br.org.curitiba.ici.gtm.usuario
+entidades:
+- nomeClasse: Usuario
+  tabela: GTM_USUSUARIO
+  atributos:
+  - nome: codUsuario
+    coluna: Cod_Usuario
+    nomeExibicao: Código Usuario
+    tipo: Integer
+    id: true
+  - nome: nome
+    coluna: Nme_Iusuario
+    nomeExibicao: Nome Usuario
+    tipo: String
+    validadores:
+    - nome: NotEmpty
+    - nome: Size
+      complemento: max = 255
+  - nome: mae
+    coluna: NMe_mae
+    nomeExibicao: Nome Mãe
+    tipo: String
+    validadores:
+    - nome: NotEmpty
+    - nome: Size
+      complemento: max = 255
+  - nome: pai
+    coluna: NMe_pai
+    nomeExibicao: Nome Pai
+    tipo: String
+    validadores:
+    - nome: NotEmpty
+    - nome: Size
+      complemento: max = 255
+  - nome: cpf
+    coluna: nr_cpf
+    nomeExibicao: Número CPF
+    tipo: String
+    validadores:
+    - nome: NotEmpty
+    - nome: Size
+      complemento: max = 20    
+          
+      

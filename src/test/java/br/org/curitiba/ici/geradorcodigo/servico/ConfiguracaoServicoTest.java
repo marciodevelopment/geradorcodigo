@@ -1,5 +1,7 @@
 package br.org.curitiba.ici.geradorcodigo.servico;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +17,13 @@ class ConfiguracaoServicoTest {
 		
 		ConfiguracaoServico configuracao = new ConfiguracaoServico("Pais", "br.org.curitiba.ici.gtm.pais", "codPais", atributosPesquisaInit);
 		System.out.println(configuracao.getArquivo());
+	}
+	
+	@Test
+	void getPastatest() {
+		ConfiguracaoServico configuracao = new ConfiguracaoServico("Pais", "br.org.curitiba.ici.gtm.pais", "codPais", null);
+		assertEquals("br.org.curitiba.ici.gtm.pais.service.PaisService.java", configuracao.getPasta());
+		
 	}
 
 }

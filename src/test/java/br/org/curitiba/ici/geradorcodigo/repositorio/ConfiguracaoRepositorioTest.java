@@ -32,5 +32,11 @@ class ConfiguracaoRepositorioTest {
 		
 		assertEquals(codigoRepositorio, configuracao.getArquivo());
 	}
+	
+	@Test
+	void getPastaTest() {
+		ConfiguracaoRepositorio configuracao = new ConfiguracaoRepositorio("br.org.curitiba.ici.gtm.pais", "Pais");
+		assertEquals("br.org.curitiba.ici.gtm.pais.repository.PaisRepository.java", configuracao.getPasta());
+	}
 
 }

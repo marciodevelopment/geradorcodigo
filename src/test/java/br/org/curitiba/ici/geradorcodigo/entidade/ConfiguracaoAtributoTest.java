@@ -17,11 +17,7 @@ class ConfiguracaoAtributoTest {
 		String expectedImport0 = "import javax.persistence.Id";
 		String expectedImport1 = "import javax.persistence.Column";
 		
-		ConfiguracaoAtributo configuracaoAtributo = new ConfiguracaoAtributo();
-		configuracaoAtributo.setId(true);
-		configuracaoAtributo.setTipoAtributo("Integer");
-		configuracaoAtributo.setNomeAtributo("codBanco");
-		configuracaoAtributo.setNomeColunaBanco("cod_banco");
+		ConfiguracaoAtributo configuracaoAtributo = new ConfiguracaoAtributo(true, "cod_banco", "codBanco", "Integer");
 		
 		assertEquals(expectedCodigo0, configuracaoAtributo.gerarConfiguacao().getLinhasCodigoGerado().get(0));
 		assertEquals(expectedCodigo1, configuracaoAtributo.gerarConfiguacao().getLinhasCodigoGerado().get(1));
@@ -40,12 +36,7 @@ class ConfiguracaoAtributoTest {
 		String expectedCodigo1 = "private Integer codBanco";
 		
 		
-		ConfiguracaoAtributo configuracaoAtributo = new ConfiguracaoAtributo();
-		configuracaoAtributo.setId(false);
-		configuracaoAtributo.setTipoAtributo("Integer");
-		configuracaoAtributo.setNomeAtributo("codBanco");
-		configuracaoAtributo.setNomeColunaBanco("cod_banco");
-		
+		ConfiguracaoAtributo configuracaoAtributo = new ConfiguracaoAtributo(true, "cod_banco", "codBanco", "Integer");
 		assertEquals(expectedCodigo0, configuracaoAtributo.gerarConfiguacao().getLinhasCodigoGerado().get(0));
 		assertEquals(expectedCodigo1, configuracaoAtributo.gerarConfiguacao().getLinhasCodigoGerado().get(1));
 		
@@ -56,20 +47,11 @@ class ConfiguracaoAtributoTest {
 	@Test
 	void gerarConfiguacaoParaIdFalseComValidacoesTest() {
 		
-		ConfiguracaoAtributo configuracaoAtributo = new ConfiguracaoAtributo();
-		configuracaoAtributo.setId(false);
-		configuracaoAtributo.setTipoAtributo("Integer");
-		configuracaoAtributo.setNomeAtributo("codBanco");
-		configuracaoAtributo.setNomeColunaBanco("cod_banco");
+		ConfiguracaoAtributo configuracaoAtributo = new ConfiguracaoAtributo(true, "cod_banco", "codBanco", "Integer");
+		ConfiguracaoValidacaoAtributo validacaoNotNull = new ConfiguracaoValidacaoAtributo("notnull", "naonulo", null);
 		
-		ConfiguracaoValidacaoAtributo validacaoNotNull = new ConfiguracaoValidacaoAtributo();
-		validacaoNotNull.setNomeValidacao("notnull");
-		validacaoNotNull.setMensagem("naonulo");
 		
-		ConfiguracaoValidacaoAtributo validacaoMax = new ConfiguracaoValidacaoAtributo();
-		validacaoMax.setNomeValidacao("max");
-		validacaoMax.setMensagem("maxvalue");
-		validacaoMax.setComplemento("value=10");
+		ConfiguracaoValidacaoAtributo validacaoMax = new ConfiguracaoValidacaoAtributo("max", "maxvalue", "value=10");
 		
 		configuracaoAtributo
 		.addValidacao(validacaoNotNull)

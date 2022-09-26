@@ -14,10 +14,18 @@ public class ConfiguracaoRepositorio implements ArquivoFinal {
 		return
 				getTemplate()
 				.replace("nomePacote_Entidade", nomePacote + "." + Constantes.NOME_PACOTE_ENTIDADE + ".nomeEntidade")
-				.replace("nomePacote", nomePacote + "." + Constantes.NOME_PACOTE_REPOSTITORIO)
+				.replace("nomePacote", getNomePacote())
 				.replace("nomeEntidade", nomeEntidade + Constantes.NOME_FINAL_ENTIDADE)
-				.replace("nomeRepositorio", nomeEntidade + Constantes.NOME_FINAL_REPOSITORIO);
+				.replace("nomeRepositorio", getNomeRepositorio());
 				
+	}
+
+	private String getNomeRepositorio() {
+		return nomeEntidade + Constantes.NOME_FINAL_REPOSITORIO;
+	}
+
+	private String getNomePacote() {
+		return nomePacote + "." + Constantes.NOME_PACOTE_REPOSTITORIO;
 	}
 	
 	private String getTemplate() {
@@ -38,8 +46,7 @@ public class ConfiguracaoRepositorio implements ArquivoFinal {
 	
 	@Override
 	public String getPasta() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.getNomePacote() + "." + getNomeRepositorio() + ".java";
 	}
 	
 	

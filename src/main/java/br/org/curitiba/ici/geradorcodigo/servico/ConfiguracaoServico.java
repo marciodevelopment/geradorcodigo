@@ -13,7 +13,7 @@ public class ConfiguracaoServico implements ArquivoFinal {
 	private String nomeEntidade;
 	private String nomePacote;
 	private String nomeAtributoId;
-	private List<String> atributosPesquisaInit;
+	private List<String> atributosPesquisaIniciaEm;
 
 	private String getCodigoServico() {
 		String nomeRepositorio = nomeEntidade + Constantes.NOME_FINAL_REPOSITORIO;
@@ -23,13 +23,13 @@ public class ConfiguracaoServico implements ArquivoFinal {
 		return
 				getTemplate()
 				.replace("nomePacote", nomePacote)
-				.replace("servicoPacote", Constantes.NOME_PACOTE_SERVICO)
+				.replace("servicoPacote", getPacoteServico())
 				.replace("nome_Pacote_Entidade", Constantes.NOME_PACOTE_ENTIDADE)
 				.replace("nome_Entidade_Mensagem", nomeEntidade)
 				.replace("nomeEntidade", nomeEntidade + Constantes.NOME_FINAL_ENTIDADE)
 				.replace("nome_Pacote_Repositorio", Constantes.NOME_PACOTE_REPOSTITORIO)
 				.replace("nomeRepositorio", nomeRepositorio)
-				.replace("nomeServico", nomeEntidade + Constantes.NOME_FINAL_SERVICO)
+				.replace("nomeServico", getNomeServico())
 				.replace("variavelRepositorio", variavelRepositorio)
 				.replace("nomeAtributoId", nomeAtributoId)
 				.replace("mensagemNotFound", getMensagemNotFound())
@@ -39,10 +39,18 @@ public class ConfiguracaoServico implements ArquivoFinal {
 
 	}
 
+	private String getPacoteServico() {
+		return Constantes.NOME_PACOTE_SERVICO;
+	}
+
+	private String getNomeServico() {
+		return nomeEntidade + Constantes.NOME_FINAL_SERVICO;
+	}
+
 	private String getMatchers() {
 		String matcherStr = "\t\t\t\t.withMatcher(\"atributo\", ExampleMatcher.GenericPropertyMatchers.startsWith())\n";
 		String matchersFinal =
-				this.atributosPesquisaInit
+				this.atributosPesquisaIniciaEm
 				.stream()
 				.map(atributo -> matcherStr.replace("atributo", atributo))
 				.reduce("", (valorAtual, valorFinal) -> valorFinal + valorAtual);
@@ -70,8 +78,7 @@ public class ConfiguracaoServico implements ArquivoFinal {
 	}
 	@Override
 	public String getPasta() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.nomePacote + "." + this.getPacoteServico() + "." + this.getNomeServico() + ".java";
 	}
 
 
@@ -129,7 +136,7 @@ public class ConfiguracaoServico implements ArquivoFinal {
 				+ "				.matching()\n"
 				+ "				.withIgnoreNullValues()\n"
 				+ "matchers;\n"
-				+ "		Example<PaisEntity> example = Example.of(nomeVariavelEntidade, customExampleMatcher);\n"
+				+ "		Example<nomeEntidade> example = Example.of(nomeVariavelEntidade, customExampleMatcher);\n"
 				+ "		return variavelRepositorio.findAll(example, pageable);\n"
 				+ "	}\n"
 				+ "	\n"

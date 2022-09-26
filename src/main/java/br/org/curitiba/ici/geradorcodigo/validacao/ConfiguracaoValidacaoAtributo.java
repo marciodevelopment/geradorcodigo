@@ -4,15 +4,15 @@ import org.apache.commons.lang3.StringUtils;
 
 import br.org.curitiba.ici.geradorcodigo.common.Configuracao;
 import br.org.curitiba.ici.geradorcodigo.common.LinhaCodigoImplementada;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
+@AllArgsConstructor
 @Data
 public class ConfiguracaoValidacaoAtributo implements Configuracao {
-
 	private String nomeValidacao;
 	private String mensagem;
 	private String complemento;
-
 
 	private String getLinhaCodigo() {
 		StringBuilder configuracao = new StringBuilder(Validador.toValidador(nomeValidacao).getAnotacaoValidador()).append("("); 

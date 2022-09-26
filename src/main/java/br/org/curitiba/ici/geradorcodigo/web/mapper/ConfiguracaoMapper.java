@@ -19,7 +19,7 @@ public class ConfiguracaoMapper implements ArquivoFinal {
 				.replace("nomePacote", nomePacote)
 				.replace("nomeEntidade", nomeEntidade)
 				.replace("codigoEntidade", nomeEntidade + Constantes.NOME_FINAL_ENTIDADE)
-				.replace("mapStructPacote", Constantes.NOME_PACOTE_MAP_STRUCT)
+				.replace("mapStructPacote", getPacoteMapStruct())
 				.replace("entidadePacote", Constantes.NOME_PACOTE_ENTIDADE)
 				.replace("pacoteResponse", Constantes.NOME_PACOTE_RESPONSE)
 				.replace("pacoteRequest", Constantes.NOME_PACOTE_REQUEST)
@@ -27,6 +27,10 @@ public class ConfiguracaoMapper implements ArquivoFinal {
 				.replace("nomeServico", nomeServico)
 				.replace("variavelServico", variavelServico)
 				.replace("servicoPacote", Constantes.NOME_PACOTE_SERVICO);
+	}
+
+	private String getPacoteMapStruct() {
+		return Constantes.NOME_PACOTE_MAP_STRUCT;
 	}
 	
 	@Override
@@ -36,11 +40,14 @@ public class ConfiguracaoMapper implements ArquivoFinal {
 
 	@Override
 	public String getPasta() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.nomePacote + "." + getPacoteMapStruct() + "." + getNomeClasse() + ".java";
 	}
 	
 	
+	private String getNomeClasse() {
+		return this.nomeEntidade + Constantes.NOME_FINAL_MAPPER;
+	}
+
 	private String getTemplate() {
 		return "package nomePacote.mapStructPacote;\n"
 				+ "\n"
@@ -58,7 +65,7 @@ public class ConfiguracaoMapper implements ArquivoFinal {
 				+ "import nomePacote.servicoPacote.nomeServico;\n"
 				+ "import nomePacote.pacoteRequest.AtualizacaonomeEntidadeRequest;\n"
 				+ "import nomePacote.pacoteRequest.NovonomeEntidadeRequest;\n"
-				+ "import nomePacote.pacoteRequest.PesquisanomeEntidadeRequest;\n"
+				+ "import nomePacote.pacoteRequest.nomeEntidadePesquisaRequest;\n"
 				+ "import nomePacote.pacoteResponse.nomeEntidadePesquisaResponse;\n"
 				+ "import nomePacote.pacoteResponse.nomeEntidadeResponse;\n"
 				+ "\n"
@@ -69,7 +76,7 @@ public class ConfiguracaoMapper implements ArquivoFinal {
 				+ "	private nomeServico variavelServico; \n"
 				+ "	\n"
 				+ "	public abstract codigoEntidade toEntity(NovonomeEntidadeRequest request);\n"
-				+ "	public abstract codigoEntidade toEntity(PesquisanomeEntidadeRequest request);\n"
+				+ "	public abstract codigoEntidade toEntity(nomeEntidadePesquisaRequest request);\n"
 				+ "	public abstract codigoEntidade toEntity(AtualizacaonomeEntidadeRequest request);\n"
 				+ "	public abstract nomeEntidadePesquisaResponse toPesquisaResponse(codigoEntidade entity);\n"
 				+ "	public abstract Collection<nomeEntidadePesquisaResponse> toPesquisaResponse(Collection<codigoEntidade> entity);\n"

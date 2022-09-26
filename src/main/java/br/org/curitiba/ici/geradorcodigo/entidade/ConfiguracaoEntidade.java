@@ -6,16 +6,16 @@ import java.util.List;
 
 import br.org.curitiba.ici.geradorcodigo.common.ArquivoFinal;
 import br.org.curitiba.ici.geradorcodigo.common.Constantes;
-import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import lombok.Setter;
 
 
-@NoArgsConstructor
+@AllArgsConstructor
 @Setter
 public class ConfiguracaoEntidade implements ArquivoFinal {
-	private String nomeTabela;
-	private String nomePacote;
-	private String nomeEntidade;
+	private final String nomeTabela;
+	private final String nomePacote;
+	private final String nomeEntidade;
 	private HashSet<ConfiguracaoAtributo> configuracoesAtributo;
 	
 
@@ -23,11 +23,19 @@ public class ConfiguracaoEntidade implements ArquivoFinal {
 		String templateClasse = getTemplateClasse();
 		return
 				templateClasse
-				.replace("nomePacote", nomePacote + "." + Constantes.NOME_PACOTE_ENTIDADE)
+				.replace("nomePacote", getPacote())
 				.replace("imports", this.getCodigoImports())
 				.replace("nomeTabela", nomeTabela)
-				.replace("nomeEntidade", nomeEntidade + Constantes.NOME_FINAL_ENTIDADE)
+				.replace("nomeEntidade", getNomeEntidade())
 				.replace("atributos", this.getCodigoAtributos());
+	}
+
+	private String getNomeEntidade() {
+		return nomeEntidade + Constantes.NOME_FINAL_ENTIDADE;
+	}
+
+	private String getPacote() {
+		return nomePacote + "." + Constantes.NOME_PACOTE_ENTIDADE;
 	}
 
 	private String getTemplateClasse() {
@@ -88,18 +96,7 @@ public class ConfiguracaoEntidade implements ArquivoFinal {
 
 	@Override
 	public String getPasta() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.getPacote() + "." + getNomeEntidade() + ".java";
 	}
-
-	public ConfiguracaoEntidade(String nomeTabela, String nomePacote, String nomeEntidade,
-			HashSet<ConfiguracaoAtributo> configuracoesAtributo) {
-		super();
-		this.nomeTabela = nomeTabela;
-		this.nomePacote = nomePacote;
-		this.nomeEntidade = nomeEntidade;
-		this.configuracoesAtributo = configuracoesAtributo;
-	}
-
 }
 
