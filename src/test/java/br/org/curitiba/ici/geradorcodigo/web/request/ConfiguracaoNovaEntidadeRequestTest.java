@@ -56,6 +56,6 @@ class ConfiguracaoNovaEntidadeRequestTest {
 	@Test
 	void getNomePastaTest() {
 		ConfiguracaoNovaEntidadeRequest configEntidadeRequest = new ConfiguracaoNovaEntidadeRequest("br.org.curitiba.ici.gtm.pais", "Pais", null);		
-		assertEquals("br.org.curitiba.ici.gtm.pais.web.controller.request.NovoPaisRequest.java", configEntidadeRequest.getPasta());
+		assertEquals("br.org.curitiba.ici.gtm.pais.web.controller.request.NovoPaisRequest.java", configEntidadeRequest.getCaminhoPacoteClasse());
 	}
 }

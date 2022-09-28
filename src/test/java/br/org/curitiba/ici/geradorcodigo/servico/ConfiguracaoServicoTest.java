@@ -16,13 +16,13 @@ class ConfiguracaoServicoTest {
 		atributosPesquisaInit.add("siglaPais");
 		
 		ConfiguracaoServico configuracao = new ConfiguracaoServico("Pais", "br.org.curitiba.ici.gtm.pais", "codPais", atributosPesquisaInit);
-		System.out.println(configuracao.getArquivo());
+		System.out.println(configuracao.getCodigoGerado());
 	}
 	
 	@Test
-	void getPastatest() {
+	void getCaminhoPacoteClasseTest() {
 		ConfiguracaoServico configuracao = new ConfiguracaoServico("Pais", "br.org.curitiba.ici.gtm.pais", "codPais", null);
-		assertEquals("br.org.curitiba.ici.gtm.pais.service.PaisService.java", configuracao.getPasta());
+		assertEquals("br.org.curitiba.ici.gtm.pais.service.PaisService.java", configuracao.getCaminhoPacoteClasse());
 		
 	}
 

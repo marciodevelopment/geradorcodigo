@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import br.org.curitiba.ici.geradorcodigo.common.ArquivoFinal;
+import br.org.curitiba.ici.geradorcodigo.common.ArquivoCodigo;
 import br.org.curitiba.ici.geradorcodigo.common.Constantes;
 import br.org.curitiba.ici.geradorcodigo.entidade.ConfiguracaoAtributo;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public class ConfiguracaoAtualizacaoEntidadeRequest implements ArquivoFinal {
+public class ConfiguracaoAtualizacaoEntidadeRequest implements ArquivoCodigo {
 	private String nomePacote;
 	private String nomeEntidade;
 	private HashSet<ConfiguracaoAtributo> configuracoesAtributo;
@@ -95,12 +95,12 @@ public class ConfiguracaoAtualizacaoEntidadeRequest implements ArquivoFinal {
 	}
 
 	@Override
-	public String getArquivo() {
+	public String getCodigoGerado() {
 		return getCodigoClasse();
 	}
 
 	@Override
-	public String getPasta() {
+	public String getCaminhoPacoteClasse() {
 		return getPacoteRequest() + "." + getNomeClasse() + ".java";
 	}
 

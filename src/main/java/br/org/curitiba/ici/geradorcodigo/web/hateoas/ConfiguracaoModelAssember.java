@@ -1,11 +1,11 @@
 package br.org.curitiba.ici.geradorcodigo.web.hateoas;
 
-import br.org.curitiba.ici.geradorcodigo.common.ArquivoFinal;
+import br.org.curitiba.ici.geradorcodigo.common.ArquivoCodigo;
 import br.org.curitiba.ici.geradorcodigo.common.Constantes;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public class ConfiguracaoModelAssember implements ArquivoFinal {
+public class ConfiguracaoModelAssember implements ArquivoCodigo {
 	private String nomeEntidade;
 	private String nomePacote;
 
@@ -33,13 +33,13 @@ public class ConfiguracaoModelAssember implements ArquivoFinal {
 	}
 
 	@Override
-	public String getArquivo() {
+	public String getCodigoGerado() {
 		return this.getCodigoModelAssembler();
 	}
 
 
 	@Override
-	public String getPasta() {
+	public String getCaminhoPacoteClasse() {
 		return this.nomePacote + "." + getHateosPacote() + "." + getNomeClasse() + ".java";
 	}
 

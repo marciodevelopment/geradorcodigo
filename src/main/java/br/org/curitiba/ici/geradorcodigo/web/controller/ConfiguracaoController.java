@@ -1,11 +1,11 @@
 package br.org.curitiba.ici.geradorcodigo.web.controller;
 
-import br.org.curitiba.ici.geradorcodigo.common.ArquivoFinal;
+import br.org.curitiba.ici.geradorcodigo.common.ArquivoCodigo;
 import br.org.curitiba.ici.geradorcodigo.common.Constantes;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public class ConfiguracaoController implements ArquivoFinal {
+public class ConfiguracaoController implements ArquivoCodigo {
 
 	private String nomeEntidade;
 	private String nomePacote;
@@ -48,12 +48,12 @@ public class ConfiguracaoController implements ArquivoFinal {
 	}
 	
 	@Override
-	public String getArquivo() {
+	public String getCodigoGerado() {
 		return getCodigoModelAssembler();
 	}
 
 	@Override
-	public String getPasta() {
+	public String getCaminhoPacoteClasse() {
 		return this.nomePacote + "." + this.getPacoteController() + "." + getNomeController() + ".java";
 	}
 	

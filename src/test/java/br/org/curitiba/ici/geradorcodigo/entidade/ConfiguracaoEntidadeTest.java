@@ -4,15 +4,13 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.HashSet;
 
-
 import org.junit.jupiter.api.Test;
-import org.junit.platform.commons.util.StringUtils;
 
 import br.org.curitiba.ici.geradorcodigo.validacao.ConfiguracaoValidacaoAtributo;
 
 class ConfiguracaoEntidadeTest {
 
-	private String codigoFinalArquivo = "package br.org.curitiba.ici.gtm.usuario.entity; \n"
+	private String codigoTeste = "package br.org.curitiba.ici.gtm.usuario.entity;\n"
 			+ "\n"
 			+ "import javax.persistence.Entity;\n"
 			+ "import javax.persistence.GenerationType;\n"
@@ -40,8 +38,7 @@ class ConfiguracaoEntidadeTest {
 			+ "	@Column(name = \"nome\")\n"
 			+ "	private String Nme_usuario;\n"
 			+ "\n"
-			+ "}\n"
-			+ "";
+			+ "}";
 	
 	@Test
 	void getArquivoTest() {
@@ -61,15 +58,18 @@ class ConfiguracaoEntidadeTest {
 		configuracoesAtributo.add(confIdadePessoa);
 		
 		
-		
 		ConfiguracaoEntidade configEntidade = new ConfiguracaoEntidade("usuario_tb", "br.org.curitiba.ici.gtm.usuario", "Usuario", configuracoesAtributo);
-		assertEquals(codigoFinalArquivo.replace(" ", "").replace("\n", "").replace("	", ""), configEntidade.getArquivo().replace(" ", "").replace("\n", "").replace("	", ""));
+		
+		String codigoGerado = configEntidade.getCodigoGerado().replaceAll("[^a-zA-Z0-9]", "");
+		String expected =  codigoTeste.replaceAll("[^a-zA-Z0-9]", "");
+		assertEquals(expected, codigoGerado);
 	}
 
 	@Test
-	void getPastaTest() {
+	void getCaminhoPacoteClasseTest() {
 		ConfiguracaoEntidade configEntidade = new ConfiguracaoEntidade("GTMPAIPais", "br.org.curitiba.ici.gtm.pais", "Pais", null);
-		assertEquals("br.org.curitiba.ici.gtm.pais.entity.PaisEntity.java" , configEntidade.getPasta());
+		System.out.println(configEntidade.getCaminhoPacoteClasse());
+		assertEquals("br.org.curitiba.ici.gtm.pais.entity.PaisEntity.java" , configEntidade.getCaminhoPacoteClasse());
 	}
 	
 

@@ -55,6 +55,6 @@ class ConfiguracaoAtualizacaoEntidadeRequestTest {
 	@Test
 	void getNomePastaTest() {
 		ConfiguracaoAtualizacaoEntidadeRequest configuracao = new ConfiguracaoAtualizacaoEntidadeRequest("br.org.curitiba.ici.gtm.pais", "Pais", null);		
-		assertEquals("br.org.curitiba.ici.gtm.pais.web.controller.request.AtualizacaoPaisRequest.java", configuracao.getPasta());
+		assertEquals("br.org.curitiba.ici.gtm.pais.web.controller.request.AtualizacaoPaisRequest.java", configuracao.getCaminhoPacoteClasse());
 	}
 }

@@ -1,11 +1,11 @@
 package br.org.curitiba.ici.geradorcodigo.repositorio;
 
-import br.org.curitiba.ici.geradorcodigo.common.ArquivoFinal;
+import br.org.curitiba.ici.geradorcodigo.common.ArquivoCodigo;
 import br.org.curitiba.ici.geradorcodigo.common.Constantes;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public class ConfiguracaoRepositorio implements ArquivoFinal {
+public class ConfiguracaoRepositorio implements ArquivoCodigo {
 	private String nomePacote;
 	private String nomeEntidade;
 	
@@ -40,12 +40,12 @@ public class ConfiguracaoRepositorio implements ArquivoFinal {
 	}
 	
 	@Override
-	public String getArquivo() {
+	public String getCodigoGerado() {
 		return getCodigoRepositorio();
 	}
 	
 	@Override
-	public String getPasta() {
+	public String getCaminhoPacoteClasse() {
 		return this.getNomePacote() + "." + getNomeRepositorio() + ".java";
 	}
 	

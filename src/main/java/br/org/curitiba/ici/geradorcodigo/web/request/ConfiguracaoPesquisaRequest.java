@@ -2,13 +2,13 @@ package br.org.curitiba.ici.geradorcodigo.web.request;
 
 import java.util.HashSet;
 
-import br.org.curitiba.ici.geradorcodigo.common.ArquivoFinal;
+import br.org.curitiba.ici.geradorcodigo.common.ArquivoCodigo;
 import br.org.curitiba.ici.geradorcodigo.common.Constantes;
 import br.org.curitiba.ici.geradorcodigo.entidade.ConfiguracaoAtributo;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public class ConfiguracaoPesquisaRequest implements ArquivoFinal {
+public class ConfiguracaoPesquisaRequest implements ArquivoCodigo {
 	
 	private String nomePacote;
 	private String nomeEntidade;
@@ -56,12 +56,12 @@ public class ConfiguracaoPesquisaRequest implements ArquivoFinal {
 	}
 
 	@Override
-	public String getArquivo() {
+	public String getCodigoGerado() {
 		return getCodigoClasse();
 	}
 
 	@Override
-	public String getPasta() {
+	public String getCaminhoPacoteClasse() {
 		return getPacoteRequest() + "." + getNomeClasse() + ".java";
 	}
 }

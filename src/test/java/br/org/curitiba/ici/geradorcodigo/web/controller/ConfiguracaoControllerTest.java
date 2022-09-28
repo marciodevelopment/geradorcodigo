@@ -9,13 +9,13 @@ class ConfiguracaoControllerTest {
 	@Test
 	void test() {
 		ConfiguracaoController configuracao = new ConfiguracaoController("Pais", "br.org.curitiba.ici.gtm.pais", "codPais");
-		System.out.println(configuracao.getArquivo());
+		System.out.println(configuracao.getCodigoGerado());
 	}
 
 	@Test
 	void getPastaTest() {
 		ConfiguracaoController configuracao = new ConfiguracaoController("Pais", "br.org.curitiba.ici.gtm.pais", "codPais");
-		assertEquals("br.org.curitiba.ici.gtm.pais.web.controller.PaisController.java", configuracao.getPasta());
+		assertEquals("br.org.curitiba.ici.gtm.pais.web.controller.PaisController.java", configuracao.getCaminhoPacoteClasse());
 	}
 	
 }

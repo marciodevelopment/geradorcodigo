@@ -54,7 +54,7 @@ class ConfiguracaoPesquisaRequestTest {
 	@Test
 	void getNomePastaTest() {
 		ConfiguracaoPesquisaRequest configEntidadeRequest = new ConfiguracaoPesquisaRequest("br.org.curitiba.ici.gtm.pais", "Pais", null);		
-		assertEquals("br.org.curitiba.ici.gtm.pais.web.controller.request.PaisPesquisaRequest.java", configEntidadeRequest.getPasta());
+		assertEquals("br.org.curitiba.ici.gtm.pais.web.controller.request.PaisPesquisaRequest.java", configEntidadeRequest.getCaminhoPacoteClasse());
 	}
 
 }

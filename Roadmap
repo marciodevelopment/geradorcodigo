@@ -1,0 +1,98 @@
+Roadmap
+
+Executavel:
+- Criar executavel java
+
+Código:
+- Refatorar o código
+
+Testes da ferramente:
+- Realizar testes quando houver pasta criada no projeto
+
+
+
+Entidade:
+- Testar o gerador com a criação de mais de uma entidade
+- Gerar lista de recursos(Mais de um rest por vez). Atualmente é gerado apenas um recurso por vez.
+- Criar importação de entidades depdendentes. No tipo da configuração será inserida: br.com.usuario.UsuarioDocumento e será criado o import e o atributo.
+- Na entity criar configuração para gerar Enum e o Converter
+- Inserir configuração para o tipo de gerador de id
+- Criar arquivo de tabela de importes e utlizar na geração dos atributos. Exemplo: LocalDateTime;java.time.LocalDateTime
+- Criar arquivo de tabela de validadores e utlizar na classe Validador. Exemplo: NotEmpty;javax.validation.constraints.MAX
+- Buscar dados da tabela do banco de dados
+
+
+Controller:
+- Seleção de quais metodos serão expostos no crud
+- Inserir configuração de descrição no swagger
+- Inserir configuração para o nome do recurso
+- Realizar correção ao gerar o código no metodo atualizar, porque esta sendo chamado salvar em vez de atualizar
+
+Requests:
+- Seleção de campos que serão expostos para criar um novo item
+- Seleção de campos que serão expostos para atualizar um novo item
+- Seleção de campos utlizados na pesquisa
+- Opção de colocar novos validadores
+- Opção de indicar que será criado um metodo especifico para salvar/update/delete para regras mais complexas
+
+
+
+Response:
+- Seleção de quais campos serão retornados na pesquisa
+- Seleção de quais campos serão retornados para o buscaId
+- Opção de retornar campos complexos no retorno como usario usuario.documento.nrCPf
+
+
+
+Testes:
+- Gerar testes de integração do controller
+
+Segurança:
+- Inserir configuração de tags de proteção nos recursos
+
+
+
+Algumas observações:
+
+O por que utilizar o mapStruct em vez de mappers ?
+Mappers se for utiliazar entidades anemicas e não houver preocupação com orientação a objetos
+Utilizar mapStruct porque ao criar e editar o objeto poderá utilzar as regras de negocios da entidade.
+
+
+Por que utilizar anotações em vez de ifs ?
+Se for utilizar testes unitários, com branch coverage, geralmente para cada if substituto de uma anotação deverá haver dois testes
+
+Exemplo:
+if (StringUtils.isEmpty(usuario.nomeUsuario))
+	throw new ExcecaoDeNegocio("Nome Usuario não pode ser vazio");
+	
+Os testes para este if deveria ser:	
+deveLevantarExceptionParaNomeUsuarioVazio
+naoDeveLevantarExceptionParaNomeUsuarioVazio
+
+Menos codigo
+@NotEmpty("Nome Usuário")
+@Size(message="Nome Usuário", min=5, max=255)
+@QtdePalavras(message="Nome Usuário", min=2)
+
+Para estas três anotações deveria ter o código:
+if (StringUtils.isEmpty(usuario.nomeUsuario))
+	throw new ExcecaoDeNegocio("Nome Usuario não pode ser vazio");
+
+if (usuario.nomeUsuario != null && (usuario.nomeUsuario.length < 5 || usuario.nomeUsuario.length > 255))
+	throw new ExcecaoDeNegocio("Nome Usuario não pode ser vazio e deve estar entre 5 e 255 caracteres");
+	
+if (usuario.nomeUsuario.split(" ") < 2))
+	throw new ExcecaoDeNegocio("Nome Usuario deve ter duas palavras");
+	
+E criar dois testes para cada if.		
+
+
+
+
+
+
+
+
+
+

@@ -1,52 +1,48 @@
 package br.org.curitiba.ici.geradorcodigo.entidade;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
-import br.org.curitiba.ici.geradorcodigo.common.ArquivoFinal;
-import br.org.curitiba.ici.geradorcodigo.common.Constantes;
+import org.apache.commons.text.StringSubstitutor;
+
+import br.org.curitiba.ici.geradorcodigo.common.ArquivoCodigo;
+import br.org.curitiba.ici.geradorcodigo.common.NomeCodigoType;
 import lombok.AllArgsConstructor;
 import lombok.Setter;
 
 
 @AllArgsConstructor
 @Setter
-public class ConfiguracaoEntidade implements ArquivoFinal {
+public class ConfiguracaoEntidade implements ArquivoCodigo {
 	private final String nomeTabela;
 	private final String nomePacote;
-	private final String nomeEntidade;
+	private final String nomeClasse;
 	private HashSet<ConfiguracaoAtributo> configuracoesAtributo;
 	
 
 	private String getCodigoClasse() {
-		String templateClasse = getTemplateClasse();
-		return
-				templateClasse
-				.replace("nomePacote", getPacote())
-				.replace("imports", this.getCodigoImports())
-				.replace("nomeTabela", nomeTabela)
-				.replace("nomeEntidade", getNomeEntidade())
-				.replace("atributos", this.getCodigoAtributos());
-	}
-
-	private String getNomeEntidade() {
-		return nomeEntidade + Constantes.NOME_FINAL_ENTIDADE;
-	}
-
-	private String getPacote() {
-		return nomePacote + "." + Constantes.NOME_PACOTE_ENTIDADE;
+		Map<String, String> valuesMap = new HashMap<>();
+		valuesMap.put("nomePacote", NomeCodigoType.ENTIDADE.pacote(nomePacote));
+		valuesMap.put("nomeClasse", NomeCodigoType.ENTIDADE.classe(nomeClasse));
+		valuesMap.put("imports", getCodigoImports());
+		valuesMap.put("nomeTabela", nomeTabela);
+		valuesMap.put("atributos", this.getCodigoAtributos());
+		StringSubstitutor stringSubstitutor = new StringSubstitutor(valuesMap);
+		return stringSubstitutor.replace(getTemplateClasse());
 	}
 
 	private String getTemplateClasse() {
 		return
-				"package nomePacote; \n" +
-				"imports\n\n" + 
+				"package ${nomePacote};\n" +
+				"${imports}\n\n" + 
 				"@Data\n" +
 				"@Entity\n" +
-				"@Table(name = \"nomeTabela\")\n" +
-				"public class nomeEntidade {\n" +
-				"atributos\n" +
+				"@Table(name = \"${nomeTabela}\")\n" +
+				"public class ${nomeClasse} {\n" +
+				"${atributos}\n" +
 				"}";
 
 	}
@@ -90,13 +86,13 @@ public class ConfiguracaoEntidade implements ArquivoFinal {
 	}
 
 	@Override
-	public String getArquivo() {
+	public String getCodigoGerado() {
 		return getCodigoClasse();
 	}
 
 	@Override
-	public String getPasta() {
-		return this.getPacote() + "." + getNomeEntidade() + ".java";
+	public String getCaminhoPacoteClasse() {
+		return NomeCodigoType.ENTIDADE.arquivo(nomePacote, nomeClasse);
 	}
 }
 

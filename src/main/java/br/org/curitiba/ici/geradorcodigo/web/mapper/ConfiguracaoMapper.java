@@ -1,11 +1,11 @@
 package br.org.curitiba.ici.geradorcodigo.web.mapper;
 
-import br.org.curitiba.ici.geradorcodigo.common.ArquivoFinal;
+import br.org.curitiba.ici.geradorcodigo.common.ArquivoCodigo;
 import br.org.curitiba.ici.geradorcodigo.common.Constantes;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public class ConfiguracaoMapper implements ArquivoFinal {
+public class ConfiguracaoMapper implements ArquivoCodigo {
 	private String nomeEntidade;
 	private String nomePacote;
 	
@@ -34,12 +34,12 @@ public class ConfiguracaoMapper implements ArquivoFinal {
 	}
 	
 	@Override
-	public String getArquivo() {
+	public String getCodigoGerado() {
 		return getCodigoMapper();
 	}
 
 	@Override
-	public String getPasta() {
+	public String getCaminhoPacoteClasse() {
 		return this.nomePacote + "." + getPacoteMapStruct() + "." + getNomeClasse() + ".java";
 	}
 	

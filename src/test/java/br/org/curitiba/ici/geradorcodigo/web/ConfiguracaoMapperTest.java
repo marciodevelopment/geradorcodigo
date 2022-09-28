@@ -11,13 +11,13 @@ class ConfiguracaoMapperTest {
 	@Test
 	void test() {
 		ConfiguracaoMapper configuracao = new ConfiguracaoMapper("Pais", "br.org.curitiba.ici.gtm.pais");
-		System.out.println(configuracao.getArquivo());
+		System.out.println(configuracao.getCodigoGerado());
 	}
 	
 	@Test
 	void getNomePastaTest() {
 		ConfiguracaoMapper configuracao = new ConfiguracaoMapper("Pais", "br.org.curitiba.ici.gtm.pais");		
-		assertEquals("br.org.curitiba.ici.gtm.pais.web.controller.mapstruct.PaisMapper.java", configuracao.getPasta());
+		assertEquals("br.org.curitiba.ici.gtm.pais.web.controller.mapstruct.PaisMapper.java", configuracao.getCaminhoPacoteClasse());
 	}
 
 }

@@ -1,51 +1,43 @@
 package br.org.curitiba.ici.geradorcodigo.servico;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.StringSubstitutor;
 
-import br.org.curitiba.ici.geradorcodigo.common.ArquivoFinal;
-import br.org.curitiba.ici.geradorcodigo.common.Constantes;
+import br.org.curitiba.ici.geradorcodigo.common.ArquivoCodigo;
+import br.org.curitiba.ici.geradorcodigo.common.NomeCodigoType;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public class ConfiguracaoServico implements ArquivoFinal {
+public class ConfiguracaoServico implements ArquivoCodigo {
 	private String nomeEntidade;
 	private String nomePacote;
 	private String nomeAtributoId;
 	private List<String> atributosPesquisaIniciaEm;
 
 	private String getCodigoServico() {
-		String nomeRepositorio = nomeEntidade + Constantes.NOME_FINAL_REPOSITORIO;
-		String variavelRepositorio = nomeRepositorio.substring(0, 1).toLowerCase() +
-				nomeRepositorio.substring(1, nomeRepositorio.length());
+		Map<String, String> valuesMap = new HashMap<>();
 
-		return
-				getTemplate()
-				.replace("nomePacote", nomePacote)
-				.replace("servicoPacote", getPacoteServico())
-				.replace("nome_Pacote_Entidade", Constantes.NOME_PACOTE_ENTIDADE)
-				.replace("nome_Entidade_Mensagem", nomeEntidade)
-				.replace("nomeEntidade", nomeEntidade + Constantes.NOME_FINAL_ENTIDADE)
-				.replace("nome_Pacote_Repositorio", Constantes.NOME_PACOTE_REPOSTITORIO)
-				.replace("nomeRepositorio", nomeRepositorio)
-				.replace("nomeServico", getNomeServico())
-				.replace("variavelRepositorio", variavelRepositorio)
-				.replace("nomeAtributoId", nomeAtributoId)
-				.replace("mensagemNotFound", getMensagemNotFound())
-				.replace("nomeVariavelEntidade", getNomeVariavelEntidade())
-				.replace("getAtributoId", getAtributoId())
-				.replace("matchers", getMatchers());
-
+		valuesMap.put("nomePacote", NomeCodigoType.SERVICO.pacote(nomePacote));
+		valuesMap.put("nomeClasse", NomeCodigoType.SERVICO.classe(nomeEntidade));
+		valuesMap.put("pacoteEntidade", NomeCodigoType.ENTIDADE.pacoteImport(nomePacote, nomeEntidade));
+		valuesMap.put("pacoteRepository", NomeCodigoType.REPOSITORY.pacoteImport(nomePacote, nomeEntidade));
+		valuesMap.put("nomeRepositorio", NomeCodigoType.REPOSITORY.classe(nomeEntidade));
+		valuesMap.put("variavelRepositorio", NomeCodigoType.REPOSITORY.variavel(nomeEntidade));
+		valuesMap.put("variavelEntidade", NomeCodigoType.ENTIDADE.variavel(nomeEntidade));
+		valuesMap.put("nomeEntidade", NomeCodigoType.ENTIDADE.classe(nomeEntidade));
+		valuesMap.put("getAtributoId", NomeCodigoType.getNomeAtributoId(nomeAtributoId));
+		valuesMap.put("nomeAtributoId", nomeAtributoId);
+		valuesMap.put("mensagemNotFound", getMensagemNotFound());
+		valuesMap.put("matchers", getMatchers());
+		StringSubstitutor stringSubstitutor = new StringSubstitutor(valuesMap);
+		return stringSubstitutor.replace(getTemplate());
 	}
 
-	private String getPacoteServico() {
-		return Constantes.NOME_PACOTE_SERVICO;
-	}
 
-	private String getNomeServico() {
-		return nomeEntidade + Constantes.NOME_FINAL_SERVICO;
-	}
 
 	private String getMatchers() {
 		String matcherStr = "\t\t\t\t.withMatcher(\"atributo\", ExampleMatcher.GenericPropertyMatchers.startsWith())\n";
@@ -59,31 +51,25 @@ public class ConfiguracaoServico implements ArquivoFinal {
 		return matchersFinal.substring(0, matchersFinal.length() - 1);
 	}
 
-	private String getNomeVariavelEntidade() {
-		return nomeEntidade.substring(0, 1).toLowerCase() + nomeEntidade.substring(1, nomeEntidade.length());
-	}
-
 	private String getMensagemNotFound() {
-		return nomeEntidade + " não encontrado para o código nomeVariavelEntidade enviado";
-	}
-
-	private String getAtributoId() {
-		return "get" + nomeAtributoId.substring(0, 1).toUpperCase() + nomeAtributoId.substring(1, nomeAtributoId.length()) + "()";
+		return "\"" + nomeEntidade + " não encontrado para o código " + NomeCodigoType.ENTIDADE.variavel(nomeEntidade).replace("Entity", "") + " enviado\", " + "\"" +
+				NomeCodigoType.ENTIDADE.variavel(nomeEntidade).replace("Entity", "") + "." + nomeAtributoId + "\"";
 	}
 
 
 	@Override
-	public String getArquivo() {
+	public String getCodigoGerado() {
 		return getCodigoServico();
 	}
+
 	@Override
-	public String getPasta() {
-		return this.nomePacote + "." + this.getPacoteServico() + "." + this.getNomeServico() + ".java";
+	public String getCaminhoPacoteClasse() {
+		return NomeCodigoType.SERVICO.arquivo(nomePacote, nomeEntidade);
 	}
 
 
 	private String getTemplate() {
-		return "package nomePacote.servicoPacote;\n"
+		return "package ${nomePacote};\n"
 				+ "\n"
 				+ "\n"
 				+ "import java.util.Optional;\n"
@@ -99,54 +85,54 @@ public class ConfiguracaoServico implements ArquivoFinal {
 				+ "\n"
 				+ "import br.org.curitiba.ici.gtm.common.exception.NotFoundException;\n"
 				+ "\n"
-				+ "import nomePacote.nome_Pacote_Entidade.nomeEntidade;\n"
-				+ "import nomePacote.nome_Pacote_Repositorio.nomeRepositorio;\n"
+				+ "import ${pacoteEntidade};\n"
+				+ "import ${pacoteRepository};\n"
 				+ "\n"
 				+ "import lombok.RequiredArgsConstructor;\n"
 				+ "\n"
 				+ "@Transactional(readOnly = true)\n"
 				+ "@RequiredArgsConstructor\n"
 				+ "@Service\n"
-				+ "public class nomeServico {\n"
-				+ "	private final nomeRepositorio variavelRepositorio;\n"
+				+ "public class ${nomeClasse} {\n"
+				+ "	private final ${nomeRepositorio} ${variavelRepositorio};\n"
 				+ "	\n"
 				+ "	@Transactional\n"
-				+ "	public nomeEntidade salvar(nomeEntidade nomeVariavelEntidade) {\n"
-				+ "		return variavelRepositorio.save(nomeVariavelEntidade);\n"
+				+ "	public ${nomeEntidade} salvar(${nomeEntidade} ${variavelEntidade}) {\n"
+				+ "		return ${variavelRepositorio}.save(${variavelEntidade});\n"
 				+ "	}\n"
 				+ "	\n"
 				+ "	@Transactional\n"
-				+ "	public nomeEntidade atualizar(nomeEntidade nomeVariavelEntidade) {\n"
-				+ "		if (!variavelRepositorio.existsById(nomeVariavelEntidade.getAtributoId)) {\n"
-				+ "			throw new NotFoundException(\"nome_Entidade_Mensagem não existente para o código \" + nomeVariavelEntidade.getAtributoId + \".\", \"nomeVariavelEntidade.nomeAtributoId\");\n"
+				+ "	public ${nomeEntidade} atualizar(${nomeEntidade} ${variavelEntidade}) {\n"
+				+ "		if (!${variavelRepositorio}.existsById(${variavelEntidade}.${getAtributoId})) {\n"
+				+ "			throw new NotFoundException(${mensagemNotFound});\n"
 				+ "		}\n"
-				+ "		return variavelRepositorio.save(nomeVariavelEntidade);\n"
+				+ "		return ${variavelRepositorio}.save(${variavelEntidade});\n"
 				+ "	}\n"
 				+ "	\n"
 				+ "	@Transactional\n"
-				+ "	public void deletarPorId(Integer nomeAtributoId) {\n"
-				+ "		if (!variavelRepositorio.existsById(nomeAtributoId)) {\n"
-				+ "			throw new NotFoundException(\"nome_Entidade_Mensagem não existente para o código \" + nomeAtributoId + \".\", \"nomeVariavelEntidade.nomeAtributoId\");\n"
+				+ "	public void deletarPorId(Integer ${nomeAtributoId}) {\n"
+				+ "		if (!${variavelRepositorio}.existsById(${nomeAtributoId})) {\n"
+				+ "			throw new NotFoundException(${mensagemNotFound});\n"
 				+ "		}\n"
-				+ "		variavelRepositorio.deleteById(nomeAtributoId);\n"
+				+ "		${variavelRepositorio}.deleteById(${nomeAtributoId});\n"
 				+ "	}\n"
 				+ "	\n"
-				+ "	public Page<nomeEntidade> pesquisarPorExemplo(nomeEntidade nomeVariavelEntidade, Pageable pageable) {\n"
+				+ "	public Page<${nomeEntidade}> pesquisarPorExemplo(${nomeEntidade} ${variavelEntidade}, Pageable pageable) {\n"
 				+ "		ExampleMatcher customExampleMatcher = ExampleMatcher\n"
 				+ "				.matching()\n"
 				+ "				.withIgnoreNullValues()\n"
-				+ "matchers;\n"
-				+ "		Example<nomeEntidade> example = Example.of(nomeVariavelEntidade, customExampleMatcher);\n"
-				+ "		return variavelRepositorio.findAll(example, pageable);\n"
+				+ "${matchers};\n"
+				+ "		Example<${nomeEntidade}> example = Example.of(${variavelEntidade}, customExampleMatcher);\n"
+				+ "		return ${variavelRepositorio}.findAll(example, pageable);\n"
 				+ "	}\n"
 				+ "	\n"
-				+ "	public Optional<nomeEntidade> buscarOpcionalPorId(Integer nomeAtributoId) {\n"
-				+ "		return variavelRepositorio.findById(nomeAtributoId);\n"
+				+ "	public Optional<${nomeEntidade}> buscarOpcionalPorId(Integer ${nomeAtributoId}) {\n"
+				+ "		return ${variavelRepositorio}.findById(${nomeAtributoId});\n"
 				+ "	}\n"
 				+ "	\n"
-				+ "	public nomeEntidade buscarPorId(Integer nomeAtributoId) {\n"
-				+ "		return variavelRepositorio.findById(nomeAtributoId)\n"
-				+ "				.orElseThrow(() -> new EntityNotFoundException(\"nome_Entidade_Mensagem não encontrado para o código nome_Entidade_Mensagem enviado\"));\n"
+				+ "	public ${nomeEntidade} buscarPorId(Integer ${nomeAtributoId}) {\n"
+				+ "		return ${variavelRepositorio}.findById(${nomeAtributoId})\n"
+				+ "				.orElseThrow(() -> new NotFoundException(${mensagemNotFound}));\n"
 				+ "	}\n"
 				+ "	\n"
 				+ "}\n"
