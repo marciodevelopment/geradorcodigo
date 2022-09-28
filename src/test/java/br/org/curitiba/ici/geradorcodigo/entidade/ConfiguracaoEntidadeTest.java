@@ -4,17 +4,21 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.HashSet;
 
+
 import org.junit.jupiter.api.Test;
+import org.junit.platform.commons.util.StringUtils;
 
 import br.org.curitiba.ici.geradorcodigo.validacao.ConfiguracaoValidacaoAtributo;
 
 class ConfiguracaoEntidadeTest {
 
-	private String codigoFinalArquivo = "package br.com.ici.pessoa.entity; \n"
+	private String codigoFinalArquivo = "package br.org.curitiba.ici.gtm.usuario.entity; \n"
 			+ "\n"
 			+ "import javax.persistence.Entity;\n"
+			+ "import javax.persistence.GenerationType;\n"
 			+ "import javax.persistence.Column;\n"
 			+ "import javax.persistence.Table;\n"
+			+ "import javax.persistence.GeneratedValue;\n"
 			+ "import lombok.Data;\n"
 			+ "import javax.validation.constraints.Max;\n"
 			+ "import javax.validation.constraints.NotNull;\n"
@@ -22,64 +26,44 @@ class ConfiguracaoEntidadeTest {
 			+ "\n"
 			+ "@Data\n"
 			+ "@Entity\n"
-			+ "@Table(name = \"pessoa_tb\")\n"
-			+ "public class PessoaEntity {\n"
+			+ "@Table(name = \"usuario_tb\")\n"
+			+ "public class UsuarioEntity {\n"
 			+ "\n"
 			+ "	@NotNull(message=\"mensagem notnull\")\n"
 			+ "	@Id\n"
-			+ "	@Column(name = \"cod_pessoa\")\n"
-			+ "	private Integer codPessoa;\n"
+			+ "	@GeneratedValue(strategy = GenerationType.IDENTITY)\n"
+			+ "	@Column(name = \"Cod_Usuario\")\n"
+			+ "	private Integer codUsuario;\n"
 			+ "\n"
 			+ "	@NotNull(message=\"mensagem notnull\")\n"
 			+ "	@Max(message=\"mensagem max\", value=10)\n"
-			+ "	@Column(name = \"vl_idade\")\n"
-			+ "	private Integer vlIdade;\n"
+			+ "	@Column(name = \"nome\")\n"
+			+ "	private String Nme_usuario;\n"
 			+ "\n"
 			+ "}\n"
 			+ "";
 	
-	//@Test
+	@Test
 	void getArquivoTest() {
 		HashSet<ConfiguracaoAtributo> configuracoesAtributo = new HashSet<>();
 		
 		ConfiguracaoValidacaoAtributo validacaoNotNull = new ConfiguracaoValidacaoAtributo("notnull", "mensagem notnull", null); 
-		
 		ConfiguracaoValidacaoAtributo validacaoMax = new ConfiguracaoValidacaoAtributo("max", "mensagem max", "value=10");
 		
-		ConfiguracaoAtributo confCodPessoa = new ConfiguracaoAtributo(true, "cod_pessoa", "codPessoa", "Integer");
+		ConfiguracaoAtributo confCodPessoa = new ConfiguracaoAtributo(true, "Cod_Usuario", "codUsuario", "Integer");
 		confCodPessoa.addValidacao(validacaoNotNull);
 		configuracoesAtributo.add(confCodPessoa);
 		
-		ConfiguracaoAtributo confIdadePessoa = new ConfiguracaoAtributo(false, "vl_idade", "vlIdade", "Integer");
+		ConfiguracaoAtributo confIdadePessoa = new ConfiguracaoAtributo(false, "nome", "Nme_usuario", "String");
 		
 		confIdadePessoa.addValidacao(validacaoNotNull);
 		confIdadePessoa.addValidacao(validacaoMax);
 		configuracoesAtributo.add(confIdadePessoa);
 		
-		ConfiguracaoEntidade configEntidade = new ConfiguracaoEntidade("pessoa_tb", "br.com.ici.pessoa", "Pessoa", configuracoesAtributo);
-		System.out.println(configEntidade.getArquivo());
-		assertEquals(codigoFinalArquivo, configEntidade.getArquivo());
-	}
-	
-	//@Test
-	void getArquivoTest2() {
-		HashSet<ConfiguracaoAtributo> configuracoesAtributo = new HashSet<>();
 		
 		
-		ConfiguracaoAtributo confCodPessoa = new ConfiguracaoAtributo(true, "Cod_Pais", "codPais", "Integer");
-		configuracoesAtributo.add(confCodPessoa);
-		
-		
-		ConfiguracaoValidacaoAtributo validacaoSize = new ConfiguracaoValidacaoAtributo("size", "Nome Pessoa", "max=10");
-		
-		ConfiguracaoValidacaoAtributo validacaoNotEmpty = new ConfiguracaoValidacaoAtributo("notempty", "Nome Pessoa", null);
-		
-		ConfiguracaoAtributo confIdadePessoa = new ConfiguracaoAtributo(false, "Nme_Pais", "nomePais", "String");
-		confIdadePessoa.addValidacao(validacaoNotEmpty);
-		confIdadePessoa.addValidacao(validacaoSize);
-		configuracoesAtributo.add(confIdadePessoa);
-		ConfiguracaoEntidade configEntidade = new ConfiguracaoEntidade("GTMPAIPais", "br.org.curitiba.ici.gtm.pais", "Pais", configuracoesAtributo);
-		
+		ConfiguracaoEntidade configEntidade = new ConfiguracaoEntidade("usuario_tb", "br.org.curitiba.ici.gtm.usuario", "Usuario", configuracoesAtributo);
+		assertEquals(codigoFinalArquivo.replace(" ", "").replace("\n", "").replace("	", ""), configEntidade.getArquivo().replace(" ", "").replace("\n", "").replace("	", ""));
 	}
 
 	@Test

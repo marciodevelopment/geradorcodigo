@@ -1,4 +1,4 @@
-pastaArquivos: /home/marcio/Desktop/arquivos-gerador
+pastaArquivos: /home/marcio/Documents/development/workspaces/poc-gtm/pocgerador-spring/src/main/java/br/org/curitiba/ici/gtm
 pacote: br.org.curitiba.ici.gtm.usuario
 entidades:
 - nomeClasse: Usuario
@@ -40,6 +40,4 @@ entidades:
     validadores:
     - nome: NotEmpty
     - nome: Size
-      complemento: max = 20    
-          
-      
+      complemento: max = 20

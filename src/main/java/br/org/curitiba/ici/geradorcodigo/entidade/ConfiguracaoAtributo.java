@@ -30,9 +30,9 @@ public class ConfiguracaoAtributo implements Configuracao {
 	
 	private List<String> getCodigoGerado() {
 		carregarCodigosValidacoes();
-		if (id) {
-			codigos.add("@GeneratedValue(strategy = GenerationType.IDENTITY)");
+		if (isId()) {
 			codigos.add("@Id");
+			codigos.add("@GeneratedValue(strategy = GenerationType.IDENTITY)");
 		}
 		codigos.add("@Column(name = \"" + nomeColunaBanco + "\")");
 		codigos.add("private " + tipoAtributo + " " + nomeAtributo);
