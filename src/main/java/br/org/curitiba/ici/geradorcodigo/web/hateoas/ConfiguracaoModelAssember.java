@@ -1,35 +1,41 @@
 package br.org.curitiba.ici.geradorcodigo.web.hateoas;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.commons.text.StringSubstitutor;
+
 import br.org.curitiba.ici.geradorcodigo.common.ArquivoCodigo;
-import br.org.curitiba.ici.geradorcodigo.common.Constantes;
+import br.org.curitiba.ici.geradorcodigo.common.NomeCodigoType;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public class ConfiguracaoModelAssember implements ArquivoCodigo {
 	private String nomeEntidade;
 	private String nomePacote;
+	private String nomeAtributoId;
 
 	private String getCodigoModelAssembler() {
-		String variavelEntidade = nomeEntidade.substring(0, 1).toLowerCase() + nomeEntidade.substring(1, nomeEntidade.length()); 
-		return
-				getTemplate()
-				.replace("nomePacote", nomePacote)
-				.replace("hateoasPacote", getHateosPacote())
-				.replace("codigoEntidade", nomeEntidade + Constantes.NOME_FINAL_ENTIDADE)
-				.replace("nomeEntidade", nomeEntidade)
-				.replace("variavelEntidade", variavelEntidade)
-				.replace("mapStructPacote", Constantes.NOME_PACOTE_MAP_STRUCT)
-				.replace("pacoteResponse", Constantes.NOME_PACOTE_RESPONSE)
-				.replace("pacoteController", Constantes.NOME_PACOTE_CONTROLLER)
-				.replace("entidadePacote", Constantes.NOME_PACOTE_ENTIDADE);
-	}
-
-	private String getNomeClasse() {
-		return this.nomeEntidade + Constantes.NOME_FINAL_MODEL_ASSEMBLER;
-	}
-	
-	private String getHateosPacote() {
-		return Constantes.NOME_PACOTE_HATEOAS;
+		
+		Map<String, String> valuesMap = new HashMap<>();
+		valuesMap.put("nomePacote", NomeCodigoType.HATEOAS.pacote(nomePacote));
+		valuesMap.put("nomeClasse", NomeCodigoType.HATEOAS.classe(nomeEntidade));
+		valuesMap.put("importEntidade", NomeCodigoType.ENTIDADE.pacoteImport(nomePacote, nomeEntidade));
+		valuesMap.put("importControle", NomeCodigoType.CONTROLE.pacoteImport(nomePacote, nomeEntidade));
+		valuesMap.put("importMapper", NomeCodigoType.MAPPER.pacoteImport(nomePacote, nomeEntidade));
+		valuesMap.put("importResponse", NomeCodigoType.RESPONSE.pacoteImport(nomePacote, nomeEntidade));
+		valuesMap.put("nomeClasseEntidade", NomeCodigoType.ENTIDADE.classe(nomeEntidade));
+		valuesMap.put("classeResponse", NomeCodigoType.RESPONSE.classe(nomeEntidade));
+		valuesMap.put("nomeClasseMapper", NomeCodigoType.MAPPER.classe(nomeEntidade));
+		valuesMap.put("variavelMapper", NomeCodigoType.MAPPER.variavel(nomeEntidade));
+		valuesMap.put("getAtributoId", NomeCodigoType.getNomeAtributoId(nomeAtributoId));
+		valuesMap.put("variavelEntidade", NomeCodigoType.ENTIDADE.variavelEntidade(nomeEntidade));
+		valuesMap.put("nomeAtributoId", nomeAtributoId);
+		valuesMap.put("nomeClasseController", NomeCodigoType.CONTROLE.classe(nomeEntidade));
+		valuesMap.put("variavelResponse", NomeCodigoType.RESPONSE.variavel(nomeEntidade));
+		
+		StringSubstitutor stringSubstitutor = new StringSubstitutor(valuesMap);
+		return stringSubstitutor.replace(getTemplate());
 	}
 
 	@Override
@@ -40,11 +46,11 @@ public class ConfiguracaoModelAssember implements ArquivoCodigo {
 
 	@Override
 	public String getCaminhoPacoteClasse() {
-		return this.nomePacote + "." + getHateosPacote() + "." + getNomeClasse() + ".java";
+		return NomeCodigoType.HATEOAS.arquivo(nomePacote, nomeEntidade);
 	}
 
 	private String getTemplate() {
-		String template = "package nomePacote.hateoasPacote;\n"
+		String template = "package ${nomePacote};\n"
 				+ "\n"
 				+ "import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;\n"
 				+ "import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;\n"
@@ -54,49 +60,49 @@ public class ConfiguracaoModelAssember implements ArquivoCodigo {
 				+ "import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;\n"
 				+ "import org.springframework.stereotype.Component;\n"
 				+ "\n"
-				+ "import nomePacote.entidadePacote.codigoEntidade;\n"
-				+ "import nomePacote.pacoteController.nomeEntidadeController;\n"
-				+ "import nomePacote.mapStructPacote.nomeEntidadeMapper;\n"
-				+ "import nomePacote.pacoteResponse.nomeEntidadeResponse;\n"
+				+ "import ${importEntidade};\n"
+				+ "import ${importControle} ;\n"
+				+ "import ${importMapper};\n"
+				+ "import ${importResponse};\n"
 				+ "import lombok.RequiredArgsConstructor;\n"
 				+ "\n"
 				+ "@RequiredArgsConstructor\n"
 				+ "@Component\n"
-				+ "public class nomeEntidadeModelAssembler implements RepresentationModelAssembler<codigoEntidade, nomeEntidadeResponse> {\n"
-				+ "	private final nomeEntidadeMapper variavelEntidadeMapper;\n"
+				+ "public class ${nomeClasse} implements RepresentationModelAssembler<${nomeClasseEntidade}, ${classeResponse}> {\n"
+				+ "	private final ${nomeClasseMapper} ${variavelMapper};\n"
 				+ "	\n"
 				+ "	@Override\n"
-				+ "	public nomeEntidadeResponse toModel(codigoEntidade entity) {\n"
-				+ "		nomeEntidadeResponse variavelEntidadeResponse = variavelEntidadeMapper.toResponse(entity);\n"
+				+ "	public ${classeResponse} toModel(${nomeClasseEntidade} entity) {\n"
+				+ "		${classeResponse} ${variavelResponse} = ${variavelMapper}.toResponse(entity);\n"
 				+ "		\n"
-				+ "		variavelEntidadeResponse.add(\n"
-				+ "				linkTo(methodOn(nomeEntidadeController.class)\n"
-				+ "						.deletar(entity.getCodnomeEntidade())).withRel(\"deletar\"));\n"
+				+ "		${variavelResponse}.add(\n"
+				+ "				linkTo(methodOn(${nomeClasseController}.class)\n"
+				+ "						.deletar(entity.${getAtributoId})).withRel(\"deletar\"));\n"
 				+ "		\n"
-				+ "		variavelEntidadeResponse.add(\n"
-				+ "				linkTo(methodOn(nomeEntidadeController.class)\n"
+				+ "		${variavelResponse}.add(\n"
+				+ "				linkTo(methodOn(${nomeClasseController}.class)\n"
 				+ "						.salvar(null)).withRel(\"salvar\"));\n"
 				+ "		\n"
-				+ "		variavelEntidadeResponse.add(\n"
-				+ "				linkTo(methodOn(nomeEntidadeController.class)\n"
-				+ "						.atualizar(null, entity.getCodnomeEntidade())).withRel(\"atualizar\"));\n"
+				+ "		${variavelResponse}.add(\n"
+				+ "				linkTo(methodOn(${nomeClasseController}.class)\n"
+				+ "						.atualizar(null, entity.${getAtributoId})).withRel(\"atualizar\"));\n"
 				+ "		\n"
-				+ "		variavelEntidadeResponse.add(\n"
-				+ "				getSelfLink(entity.getCodnomeEntidade()));\n"
+				+ "		${variavelResponse}.add(\n"
+				+ "				getSelfLink(entity.${getAtributoId}));\n"
 				+ "		\n"
 				+ "		// TODO: verificar nome no plural.\n"
-				+ "		variavelEntidadeResponse.add(getSelfLinkPesquisa().withRel(\"variavelEntidades\"));\n"
-				+ "		return variavelEntidadeResponse;\n"
+				+ "		${variavelResponse}.add(getSelfLinkPesquisa().withRel(\"${variavelEntidade}s\"));\n"
+				+ "		return ${variavelResponse};\n"
 				+ "	}\n"
 				+ "	\n"
-				+ "	public Link getSelfLink(Integer codnomeEntidade) {\n"
+				+ "	public Link getSelfLink(Integer ${nomeAtributoId}) {\n"
 				+ "		return\n"
-				+ "			linkTo(WebMvcLinkBuilder.methodOn(nomeEntidadeController.class)\n"
-				+ "					.buscarPorId(codnomeEntidade)).withSelfRel();\n"
+				+ "			linkTo(WebMvcLinkBuilder.methodOn(${nomeClasseController}.class)\n"
+				+ "					.buscarPorId(${nomeAtributoId})).withSelfRel();\n"
 				+ "	}\n"
 				+ "	\n"
 				+ "	public Link getSelfLinkPesquisa() {\n"
-				+ "		return linkTo(WebMvcLinkBuilder.methodOn(nomeEntidadeController.class)\n"
+				+ "		return linkTo(WebMvcLinkBuilder.methodOn(${nomeClasseController}.class)\n"
 				+ "				.pesquisar(null, null)).withSelfRel();\n"
 				+ "	}\n"
 				+ "}\n"

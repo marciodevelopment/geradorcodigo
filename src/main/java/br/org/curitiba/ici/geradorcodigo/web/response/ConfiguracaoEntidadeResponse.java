@@ -1,9 +1,13 @@
 package br.org.curitiba.ici.geradorcodigo.web.response;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+
+import org.apache.commons.text.StringSubstitutor;
 
 import br.org.curitiba.ici.geradorcodigo.common.ArquivoCodigo;
-import br.org.curitiba.ici.geradorcodigo.common.Constantes;
+import br.org.curitiba.ici.geradorcodigo.common.NomeCodigoType;
 import br.org.curitiba.ici.geradorcodigo.entidade.ConfiguracaoAtributo;
 import lombok.AllArgsConstructor;
 
@@ -14,23 +18,16 @@ public class ConfiguracaoEntidadeResponse implements ArquivoCodigo {
 	private HashSet<ConfiguracaoAtributo> configuracoesAtributo;
 
 	private String getCodigoClasse() {
-		String templateClasse = getTemplateClasse();
-		String nomeRelation = nomeEntidade.substring(0, 1).toLowerCase() + nomeEntidade.substring(1, nomeEntidade.length());
+		Map<String, String> valuesMap = new HashMap<>();
 
-		return
-				templateClasse
-				.replace("nomePacote", getPacoteResponse())
-				.replace("nomeClasse", getNomeClasse())
-				.replace("nomeRelation", nomeRelation)
-				.replace("atributos", this.getCodigoAtributos());
-	}
-
-	private String getNomeClasse() {
-		return nomeEntidade + Constantes.NOME_FINAL_RESPONSE;
-	}
-
-	private String getPacoteResponse() {
-		return nomePacote + "." + Constantes.NOME_PACOTE_RESPONSE;
+		valuesMap.put("nomePacote", NomeCodigoType.RESPONSE.pacote(nomePacote));
+		valuesMap.put("nomeClasse", NomeCodigoType.RESPONSE.classe(nomeEntidade));
+		valuesMap.put("nomeRelation", NomeCodigoType.ENTIDADE.relation(nomeEntidade));
+		valuesMap.put("nomeRelations", NomeCodigoType.ENTIDADE.relations(nomeEntidade));
+		valuesMap.put("atributos", this.getCodigoAtributos());
+		
+		StringSubstitutor stringSubstitutor = new StringSubstitutor(valuesMap);
+		return stringSubstitutor.replace(getTemplate());
 	}
 
 	private String getCodigoAtributos() {
@@ -44,8 +41,8 @@ public class ConfiguracaoEntidadeResponse implements ArquivoCodigo {
 
 	}
 
-	private String getTemplateClasse() {
-		return "package nomePacote;\n"
+	private String getTemplate() {
+		return "package ${nomePacote};\n"
 				+ "\n"
 				+ "import org.springframework.hateoas.RepresentationModel;\n"
 				+ "import org.springframework.hateoas.server.core.Relation;\n"
@@ -56,9 +53,9 @@ public class ConfiguracaoEntidadeResponse implements ArquivoCodigo {
 				+ "@Getter\n"
 				+ "@Setter\n"
 				+ "// TODO: realizar correção nos nomes dos relations\n"
-				+ "@Relation(itemRelation = \"nomeRelation\", collectionRelation = \"nomeRelations\")\n"
-				+ "public class nomeClasse extends RepresentationModel<nomeClasse> {\n"
-				+ "	atributos\n"
+				+ "@Relation(itemRelation = \"${nomeRelation}\", collectionRelation = \"${nomeRelations}\")\n"
+				+ "public class ${nomeClasse} extends RepresentationModel<${nomeClasse}> {\n"
+				+ "	${atributos}\n"
 				+ "}";
 	}
 
@@ -69,7 +66,7 @@ public class ConfiguracaoEntidadeResponse implements ArquivoCodigo {
 
 	@Override
 	public String getCaminhoPacoteClasse() {
-		return getPacoteResponse() + "." + getNomeClasse() + ".java";
+		return NomeCodigoType.RESPONSE.arquivo(nomePacote, nomeEntidade);
 	}
 
 

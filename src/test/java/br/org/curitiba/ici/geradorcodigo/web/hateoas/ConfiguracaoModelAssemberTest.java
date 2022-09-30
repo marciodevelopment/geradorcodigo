@@ -8,13 +8,13 @@ class ConfiguracaoModelAssemberTest {
 
 	@Test
 	void test() {
-		ConfiguracaoModelAssember configuracao = new ConfiguracaoModelAssember("Pais", "br.org.curitiba.ici.gtm.pais");
+		ConfiguracaoModelAssember configuracao = new ConfiguracaoModelAssember("Pais", "br.org.curitiba.ici.gtm.pais", "codPais");
 		System.out.println(configuracao.getCodigoGerado());
 	}
 
 	@Test
 	void getNomePastaTest() {
-		ConfiguracaoModelAssember configuracao = new ConfiguracaoModelAssember("Pais", "br.org.curitiba.ici.gtm.pais");		
+		ConfiguracaoModelAssember configuracao = new ConfiguracaoModelAssember("Pais", "br.org.curitiba.ici.gtm.pais", "codPais");		
 		assertEquals("br.org.curitiba.ici.gtm.pais.web.controller.hateoas.PaisModelAssembler.java", configuracao.getCaminhoPacoteClasse());
 	}
 	

@@ -74,8 +74,6 @@ public class ConfiguracaoServico implements ArquivoCodigo {
 				+ "\n"
 				+ "import java.util.Optional;\n"
 				+ "\n"
-				+ "import javax.persistence.EntityNotFoundException;\n"
-				+ "\n"
 				+ "import org.springframework.data.domain.Example;\n"
 				+ "import org.springframework.data.domain.ExampleMatcher;\n"
 				+ "import org.springframework.data.domain.Page;\n"

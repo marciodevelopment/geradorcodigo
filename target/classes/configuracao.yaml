@@ -1,7 +1,7 @@
-pastaArquivos: /home/marcio/Documents/development/workspaces/poc-gtm/pocgerador-spring/src/main/java/br/org/curitiba/ici/gtm
-pacote: br.org.curitiba.ici.gtm.usuario
+pastaArquivos: /home/marcio/Documents/development/workspaces/poc-gtm/pocgerador-spring/src/main/java/br/org/curitiba/ici/gtm/
+pacote: br.org.curitiba.ici.gtm.pessoa
 entidades:
-- nomeClasse: Usuario
+- nomeClasse: Pessoa
   tabela: GTM_USUSUARIO
   atributos:
   - nome: codUsuario

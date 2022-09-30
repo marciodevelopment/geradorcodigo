@@ -76,11 +76,11 @@ public class ProcessadorConfiguracao {
 
 
 	private ArquivoCodigo criarArquivoPesquisaModelAssember(ArquivoConfiguracao arquivoConfiguracao2) {
-		return new ConfiguracaoPesquisaModelAssember(arquivoConfiguracao.getEntidades().get(0).getNomeClasse(), arquivoConfiguracao.getPacote());
+		return new ConfiguracaoPesquisaModelAssember(arquivoConfiguracao.getEntidades().get(0).getNomeClasse(), arquivoConfiguracao.getPacote(), arquivoConfiguracao2.getNomeAtributoId());
 	}
 
 	private ArquivoCodigo criarArquivoModelAssember(ArquivoConfiguracao arquivoConfiguracao) {
-		return new ConfiguracaoModelAssember(arquivoConfiguracao.getEntidades().get(0).getNomeClasse(), arquivoConfiguracao.getPacote());
+		return new ConfiguracaoModelAssember(arquivoConfiguracao.getEntidades().get(0).getNomeClasse(), arquivoConfiguracao.getPacote(), arquivoConfiguracao.getNomeAtributoId());
 	}
 
 

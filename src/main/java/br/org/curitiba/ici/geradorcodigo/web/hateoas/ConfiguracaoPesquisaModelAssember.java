@@ -1,26 +1,42 @@
 package br.org.curitiba.ici.geradorcodigo.web.hateoas;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.commons.text.StringSubstitutor;
+
 import br.org.curitiba.ici.geradorcodigo.common.ArquivoCodigo;
 import br.org.curitiba.ici.geradorcodigo.common.Constantes;
+import br.org.curitiba.ici.geradorcodigo.common.NomeCodigoType;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public class ConfiguracaoPesquisaModelAssember implements ArquivoCodigo {
 	private String nomeEntidade;
 	private String nomePacote;
+	private String nomeAtributoId;
 
 	private String getCodigoModelAssembler() {
-		String variavelEntidade = nomeEntidade.substring(0, 1).toLowerCase() + nomeEntidade.substring(1, nomeEntidade.length()); 
-		return
-				getTemplate()
-				.replace("nomePacote", nomePacote)
-				.replace("hateoasPacote", getHateosPacote())				
-				.replace("codigoEntidade", nomeEntidade + Constantes.NOME_FINAL_ENTIDADE)
-				.replace("nomeEntidade", nomeEntidade)
-				.replace("variavelEntidade", variavelEntidade)
-				.replace("pacoteResponse", Constantes.NOME_PACOTE_RESPONSE)
-				.replace("mapStructPacote", Constantes.NOME_PACOTE_MAP_STRUCT)
-				.replace("pacoteController", Constantes.NOME_PACOTE_CONTROLLER);
+		
+		Map<String, String> valuesMap = new HashMap<>();
+		valuesMap.put("nomePacote", NomeCodigoType.PESQUISA_HATEOAS.pacote(nomePacote));
+		valuesMap.put("nomeClasse", NomeCodigoType.PESQUISA_HATEOAS.classe(nomeEntidade));
+		valuesMap.put("importEntidade", NomeCodigoType.ENTIDADE.pacoteImport(nomePacote, nomeEntidade));
+		valuesMap.put("importController", NomeCodigoType.CONTROLE.pacoteImport(nomePacote, nomeEntidade));
+		valuesMap.put("importMapper", NomeCodigoType.MAPPER.pacoteImport(nomePacote, nomeEntidade));
+		valuesMap.put("importResponsePesquisa", NomeCodigoType.RESPONSE_PESQUISA.pacoteImport(nomePacote, nomeEntidade));
+		valuesMap.put("variavelMapper", NomeCodigoType.MAPPER.variavel(nomeEntidade));
+		valuesMap.put("nomeClasseMapper", NomeCodigoType.MAPPER.classe(nomeEntidade));
+		valuesMap.put("nomeClasseEntidade", NomeCodigoType.ENTIDADE.classe(nomeEntidade));
+		valuesMap.put("nomeClassePesquisaResponse", NomeCodigoType.RESPONSE_PESQUISA.classe(nomeEntidade));
+		valuesMap.put("nomeClasseController", NomeCodigoType.CONTROLE.classe(nomeEntidade));
+		valuesMap.put("nomeAtributoId", nomeAtributoId);
+		valuesMap.put("nomeClassePesquisaModelAssembler", NomeCodigoType.PESQUISA_HATEOAS.classe(nomeEntidade));
+		valuesMap.put("getAtributoId", NomeCodigoType.getNomeAtributoId(nomeAtributoId));
+		valuesMap.put("variavelEntidade", NomeCodigoType.ENTIDADE.variavelEntidade(nomeEntidade));
+		
+		StringSubstitutor stringSubstitutor = new StringSubstitutor(valuesMap);
+		return stringSubstitutor.replace(getTemplate());
 	}
 
 	private String getHateosPacote() {
@@ -43,7 +59,7 @@ public class ConfiguracaoPesquisaModelAssember implements ArquivoCodigo {
 	}
 
 	private String getTemplate() {
-		return "package nomePacote.hateoasPacote;\n"
+		return "package ${nomePacote};\n"
 				+ "\n"
 				+ "import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;\n"
 				+ "\n"
@@ -55,38 +71,38 @@ public class ConfiguracaoPesquisaModelAssember implements ArquivoCodigo {
 				+ "import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;\n"
 				+ "import org.springframework.stereotype.Component;\n"
 				+ "\n"
-				+ "import nomePacote.entity.codigoEntidade;\n"
-				+ "import nomePacote.pacoteController.nomeEntidadeController;\n"
-				+ "import nomePacote.mapStructPacote.nomeEntidadeMapper;\n"
-				+ "import nomePacote.pacoteResponse.nomeEntidadePesquisaResponse;\n"
+				+ "import ${importEntidade};\n"
+				+ "import ${importController};\n"
+				+ "import ${importMapper};\n"
+				+ "import ${importResponsePesquisa};\n"
 				+ "import lombok.RequiredArgsConstructor;\n"
 				+ "\n"
 				+ "@RequiredArgsConstructor\n"
 				+ "@Component\n"
-				+ "public class nomeEntidadePesquisaModelAssembler implements RepresentationModelAssembler<codigoEntidade, nomeEntidadePesquisaResponse> {\n"
-				+ "	private final nomeEntidadeMapper variavelEntidadeMapper;\n"
-				+ "	private final PagedResourcesAssembler<codigoEntidade> pageResourceAssembler;\n"
+				+ "public class ${nomeClasse} implements RepresentationModelAssembler<${nomeClasseEntidade}, ${nomeClassePesquisaResponse}> {\n"
+				+ "	private final ${nomeClasseMapper} ${variavelMapper};\n"
+				+ "	private final PagedResourcesAssembler<${nomeClasseEntidade}> pageResourceAssembler;\n"
 				+ "	\n"
 				+ "	@Override\n"
-				+ "	public nomeEntidadePesquisaResponse toModel(codigoEntidade entity) {\n"
-				+ "		return variavelEntidadeMapper\n"
-				+ "				.toPesquisaResponse(entity)\n"
-				+ "				.add(getSelfLinkItem(entity.getCodnomeEntidade()));\n"
+				+ "	public ${nomeClassePesquisaResponse} toModel(${nomeClasseEntidade} entity) {\n"
+				+ "		return ${variavelMapper}\n"
+				+ "				.to${nomeClassePesquisaResponse}(entity)\n"
+				+ "				.add(getSelfLinkItem(entity.${getAtributoId}));\n"
 				+ "	}\n"
 				+ "	\n"
-				+ "	private Link getSelfLinkItem(Integer codnomeEntidade) {\n"
+				+ "	private Link getSelfLinkItem(Integer ${nomeAtributoId}) {\n"
 				+ "		return\n"
-				+ "			linkTo(WebMvcLinkBuilder.methodOn(nomeEntidadeController.class)\n"
-				+ "					.buscarPorId(codnomeEntidade)).withSelfRel();\n"
+				+ "			linkTo(WebMvcLinkBuilder.methodOn(${nomeClasseController}.class)\n"
+				+ "					.buscarPorId(${nomeAtributoId})).withSelfRel();\n"
 				+ "	}\n"
 				+ "	\n"
-				+ "	public PagedModel<nomeEntidadePesquisaResponse> toCollectionPesquisanomeEntidadeModel(\n"
-				+ "			Page<codigoEntidade> pagenomeEntidadees) {\n"
-				+ "		return pageResourceAssembler.toModel(pagenomeEntidadees, this);\n"
+				+ "	public PagedModel<${nomeClassePesquisaResponse}> toCollection${nomeClassePesquisaModelAssembler}(\n"
+				+ "			Page<${nomeClasseEntidade}> page${variavelEntidade}s) {\n"
+				+ "		return pageResourceAssembler.toModel(page${variavelEntidade}s, this);\n"
 				+ "	}\n"
 				+ "	\n"
 				+ "	public Link getSelfLink() {\n"
-				+ "		return linkTo(WebMvcLinkBuilder.methodOn(nomeEntidadeController.class)\n"
+				+ "		return linkTo(WebMvcLinkBuilder.methodOn(${nomeClasseController}.class)\n"
 				+ "				.pesquisar(null, null)).withSelfRel();\n"
 				+ "	}\n"
 				+ "}\n"
@@ -96,3 +112,5 @@ public class ConfiguracaoPesquisaModelAssember implements ArquivoCodigo {
 
 
 }
+
+

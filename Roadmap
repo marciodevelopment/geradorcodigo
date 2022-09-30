@@ -19,8 +19,12 @@ Entidade:
 - Inserir configuração para o tipo de gerador de id
 - Criar arquivo de tabela de importes e utlizar na geração dos atributos. Exemplo: LocalDateTime;java.time.LocalDateTime
 - Criar arquivo de tabela de validadores e utlizar na classe Validador. Exemplo: NotEmpty;javax.validation.constraints.MAX
+- Gerar entidades com auditoria
 - Buscar dados da tabela do banco de dados
+- Configurar opção de utilizar mapper em vez de mapstruct
 
+Service
+- Retirar o códgio reptido de lançamento de exceção NotFoundException
 
 Controller:
 - Seleção de quais metodos serão expostos no crud
@@ -52,40 +56,9 @@ Segurança:
 
 
 
-Algumas observações:
-
-O por que utilizar o mapStruct em vez de mappers ?
-Mappers se for utiliazar entidades anemicas e não houver preocupação com orientação a objetos
-Utilizar mapStruct porque ao criar e editar o objeto poderá utilzar as regras de negocios da entidade.
 
 
-Por que utilizar anotações em vez de ifs ?
-Se for utilizar testes unitários, com branch coverage, geralmente para cada if substituto de uma anotação deverá haver dois testes
 
-Exemplo:
-if (StringUtils.isEmpty(usuario.nomeUsuario))
-	throw new ExcecaoDeNegocio("Nome Usuario não pode ser vazio");
-	
-Os testes para este if deveria ser:	
-deveLevantarExceptionParaNomeUsuarioVazio
-naoDeveLevantarExceptionParaNomeUsuarioVazio
-
-Menos codigo
-@NotEmpty("Nome Usuário")
-@Size(message="Nome Usuário", min=5, max=255)
-@QtdePalavras(message="Nome Usuário", min=2)
-
-Para estas três anotações deveria ter o código:
-if (StringUtils.isEmpty(usuario.nomeUsuario))
-	throw new ExcecaoDeNegocio("Nome Usuario não pode ser vazio");
-
-if (usuario.nomeUsuario != null && (usuario.nomeUsuario.length < 5 || usuario.nomeUsuario.length > 255))
-	throw new ExcecaoDeNegocio("Nome Usuario não pode ser vazio e deve estar entre 5 e 255 caracteres");
-	
-if (usuario.nomeUsuario.split(" ") < 2))
-	throw new ExcecaoDeNegocio("Nome Usuario deve ter duas palavras");
-	
-E criar dois testes para cada if.		
 
 
 

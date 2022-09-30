@@ -1,11 +1,15 @@
 package br.org.curitiba.ici.geradorcodigo.web.request;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.text.StringSubstitutor;
 
 import br.org.curitiba.ici.geradorcodigo.common.ArquivoCodigo;
-import br.org.curitiba.ici.geradorcodigo.common.Constantes;
+import br.org.curitiba.ici.geradorcodigo.common.NomeCodigoType;
 import br.org.curitiba.ici.geradorcodigo.entidade.ConfiguracaoAtributo;
 import lombok.AllArgsConstructor;
 
@@ -17,30 +21,26 @@ public class ConfiguracaoAtualizacaoEntidadeRequest implements ArquivoCodigo {
 	
 
 	private String getCodigoClasse() {
-		String templateClasse = getTemplateClasse();
-		return
-				templateClasse
-				.replace("nomePacote", getPacoteRequest())
-				.replace("imports", this.getCodigoImports())
-				.replace("nomeEntidade", getNomeClasse())
-				.replace("atributos", this.getCodigoAtributos());
+		Map<String, String> valuesMap = new HashMap<>();
+
+		valuesMap.put("nomePacote", NomeCodigoType.REQUEST_ATUALIZACAO.pacote(nomePacote));
+		valuesMap.put("imports", this.getCodigoImports());
+		valuesMap.put("nomeClasse", NomeCodigoType.REQUEST_ATUALIZACAO.classe(nomeEntidade));
+		valuesMap.put("atributos", this.getCodigoAtributos());
+		
+		StringSubstitutor stringSubstitutor = new StringSubstitutor(valuesMap);
+		return stringSubstitutor.replace(getTemplate());
+				
 	}
 
-	private String getNomeClasse() {
-		return Constantes.NOME_INICIO_ATUALIZACAO_ENTIDADE + nomeEntidade + Constantes.NOME_FINAL_REQUEST;
-	}
-	
-	private String getPacoteRequest() {
-		return nomePacote + "." + Constantes.NOME_PACOTE_REQUEST;
-	}
 
-	private String getTemplateClasse() {
+	private String getTemplate() {
 		return
-				"package nomePacote; \n" +
-				"imports\n\n" + 
+				"package ${nomePacote}; \n" +
+				"${imports}\n\n" + 
 				"@Data\n" +
-				"public class nomeEntidade {\n" +
-				"atributos\n" +
+				"public class ${nomeClasse} {\n" +
+				"${atributos}\n" +
 				"}";
 
 	}
@@ -101,7 +101,7 @@ public class ConfiguracaoAtualizacaoEntidadeRequest implements ArquivoCodigo {
 
 	@Override
 	public String getCaminhoPacoteClasse() {
-		return getPacoteRequest() + "." + getNomeClasse() + ".java";
+		return NomeCodigoType.REQUEST_ATUALIZACAO.arquivo(nomePacote, nomeEntidade);
 	}
 
 

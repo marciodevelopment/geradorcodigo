@@ -2,55 +2,44 @@ package br.org.curitiba.ici.geradorcodigo.web.response;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.HashSet;
+
 import org.junit.jupiter.api.Test;
+
+import br.org.curitiba.ici.geradorcodigo.entidade.ConfiguracaoAtributo;
+import br.org.curitiba.ici.geradorcodigo.validacao.ConfiguracaoValidacaoAtributo;
 
 class ConfiguracaoPesquisaResponseTest {
 
-	/*
+	
 	@Test
 	void getArquivoTest() {
 		HashSet<ConfiguracaoAtributo> configuracoesAtributo = new HashSet<>();
 		
-		ConfiguracaoValidacaoAtributo validacaoNotNull = new ConfiguracaoValidacaoAtributo();
-		validacaoNotNull.setMensagem("mensagem notnull");
-		validacaoNotNull.setNomeValidacao("notnull");
+		ConfiguracaoValidacaoAtributo validacaoNotNull = new ConfiguracaoValidacaoAtributo("notnull", "mensagem notnull", null); 
+		ConfiguracaoValidacaoAtributo validacaoMax = new ConfiguracaoValidacaoAtributo("max", "mensagem max", "value=10");
 		
-		ConfiguracaoValidacaoAtributo validacaoMax = new ConfiguracaoValidacaoAtributo();
-		validacaoMax.setMensagem("mensagem max");
-		validacaoMax.setNomeValidacao("max");
-		validacaoMax.setComplemento("value=10");
+		ConfiguracaoAtributo confCodPessoa = new ConfiguracaoAtributo(true, "Cod_Usuario", "codUsuario", "Integer");
+		confCodPessoa.addValidacao(validacaoNotNull);
+		configuracoesAtributo.add(confCodPessoa);
 		
+		ConfiguracaoAtributo confIdadePessoa = new ConfiguracaoAtributo(false, "Nme_usuario", "nome", "String");
 		
-		ConfiguracaoAtributo coonfCodPais = new ConfiguracaoAtributo();
-		coonfCodPais.setId(true);
-		coonfCodPais.setTipoAtributo("Integer");
-		coonfCodPais.setNomeAtributo("codPais");
-		coonfCodPais.setNomeColunaBanco("cod_pais");
-		coonfCodPais.addValidacao(validacaoNotNull);
-		configuracoesAtributo.add(coonfCodPais);
-		
-		ConfiguracaoAtributo confNomePais = new ConfiguracaoAtributo();
-		confNomePais.setTipoAtributo("String");
-		confNomePais.setNomeAtributo("nomePais");
-		confNomePais.setNomeColunaBanco("nm_pais");
-		confNomePais.addValidacao(validacaoNotNull);
-		confNomePais.addValidacao(validacaoMax);
-		configuracoesAtributo.add(confNomePais);
-		
-		ConfiguracaoAtributo confSiglaPais = new ConfiguracaoAtributo();
-		confSiglaPais.setTipoAtributo("String");
-		confSiglaPais.setNomeAtributo("siglaPais");
-		confSiglaPais.setNomeColunaBanco("siglaPais");
-		confSiglaPais.addValidacao(validacaoNotNull);
-		confSiglaPais.addValidacao(validacaoMax);
-		configuracoesAtributo.add(confSiglaPais);
-		
+		confIdadePessoa.addValidacao(validacaoNotNull);
+		confIdadePessoa.addValidacao(validacaoMax);
+		configuracoesAtributo.add(confIdadePessoa);
 		
 		ConfiguracaoPesquisaResponse configEntidadeResponse = new ConfiguracaoPesquisaResponse("br.org.curitiba.ici.gtm.pais", "Pais", configuracoesAtributo);
-		System.out.println(configEntidadeResponse.getArquivo());
+		
+		//String codigoGerado = configEntidade.getCodigoGerado().replaceAll("[^a-zA-Z0-9]", "");
+        //String expected =  codigoTeste.replaceAll("[^a-zA-Z0-9]", "");
+		//assertEquals(expected, codigoGerado);
+		
+		System.out.println(configEntidadeResponse.getCodigoGerado());
+		
 		
 	}
-	*/
+	
 	
 	@Test
 	void getNomePastaTest() {

@@ -1,7 +1,12 @@
 package br.org.curitiba.ici.geradorcodigo.repositorio;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.commons.text.StringSubstitutor;
+
 import br.org.curitiba.ici.geradorcodigo.common.ArquivoCodigo;
-import br.org.curitiba.ici.geradorcodigo.common.Constantes;
+import br.org.curitiba.ici.geradorcodigo.common.NomeCodigoType;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
@@ -11,30 +16,24 @@ public class ConfiguracaoRepositorio implements ArquivoCodigo {
 	
 	
 	private String getCodigoRepositorio() {
-		return
-				getTemplate()
-				.replace("nomePacote_Entidade", nomePacote + "." + Constantes.NOME_PACOTE_ENTIDADE + ".nomeEntidade")
-				.replace("nomePacote", getNomePacote())
-				.replace("nomeEntidade", nomeEntidade + Constantes.NOME_FINAL_ENTIDADE)
-				.replace("nomeRepositorio", getNomeRepositorio());
-				
-	}
+		Map<String, String> valuesMap = new HashMap<>();
 
-	private String getNomeRepositorio() {
-		return nomeEntidade + Constantes.NOME_FINAL_REPOSITORIO;
-	}
-
-	private String getNomePacote() {
-		return nomePacote + "." + Constantes.NOME_PACOTE_REPOSTITORIO;
+		valuesMap.put("nomePacote", NomeCodigoType.REPOSITORY.pacote(nomePacote));
+		valuesMap.put("nomeClasse", NomeCodigoType.REPOSITORY.classe(nomeEntidade));
+		valuesMap.put("pacoteEntidade", NomeCodigoType.ENTIDADE.pacoteImport(nomePacote, nomeEntidade));
+		valuesMap.put("nomeEntidade", NomeCodigoType.ENTIDADE.classe(nomeEntidade));
+		
+		StringSubstitutor stringSubstitutor = new StringSubstitutor(valuesMap);
+		return stringSubstitutor.replace(getTemplate());
 	}
 	
 	private String getTemplate() {
-		return "package nomePacote;\n"
+		return "package ${nomePacote};\n"
 				+ "\n"
 				+ "import org.springframework.data.jpa.repository.JpaRepository;\n"
-				+ "import nomePacote_Entidade;\n"
+				+ "import ${pacoteEntidade};\n"
 				+ "\n"
-				+ "public interface nomeRepositorio extends JpaRepository<nomeEntidade, Integer> {\n"
+				+ "public interface ${nomeClasse} extends JpaRepository<${nomeEntidade}, Integer> {\n"
 				+ "\n"
 				+ "}\n";
 	}
@@ -46,7 +45,7 @@ public class ConfiguracaoRepositorio implements ArquivoCodigo {
 	
 	@Override
 	public String getCaminhoPacoteClasse() {
-		return this.getNomePacote() + "." + getNomeRepositorio() + ".java";
+		return NomeCodigoType.REPOSITORY.arquivo(nomePacote, nomeEntidade);
 	}
 	
 	

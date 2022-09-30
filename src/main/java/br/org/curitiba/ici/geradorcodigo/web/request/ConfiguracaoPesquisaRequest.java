@@ -1,9 +1,13 @@
 package br.org.curitiba.ici.geradorcodigo.web.request;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+
+import org.apache.commons.text.StringSubstitutor;
 
 import br.org.curitiba.ici.geradorcodigo.common.ArquivoCodigo;
-import br.org.curitiba.ici.geradorcodigo.common.Constantes;
+import br.org.curitiba.ici.geradorcodigo.common.NomeCodigoType;
 import br.org.curitiba.ici.geradorcodigo.entidade.ConfiguracaoAtributo;
 import lombok.AllArgsConstructor;
 
@@ -15,20 +19,14 @@ public class ConfiguracaoPesquisaRequest implements ArquivoCodigo {
 	private HashSet<ConfiguracaoAtributo> configuracoesAtributo;
 
 	private String getCodigoClasse() {
-		String templateClasse = getTemplateClasse();
-		return
-				templateClasse
-				.replace("nomePacote", getPacoteRequest())
-				.replace("nomeClasse", getNomeClasse())
-				.replace("atributos", this.getCodigoAtributos());
-	}
+		Map<String, String> valuesMap = new HashMap<>();
 
-	private String getNomeClasse() {
-		return nomeEntidade + Constantes.NOME_FINAL_PESQUISA_REQUEST;
-	}
-
-	private String getPacoteRequest() {
-		return nomePacote + "." + Constantes.NOME_PACOTE_REQUEST;
+		valuesMap.put("nomePacote", NomeCodigoType.REQUEST_PESQUISA.pacote(nomePacote));
+		valuesMap.put("nomeClasse", NomeCodigoType.REQUEST_PESQUISA.classe(nomeEntidade));
+		valuesMap.put("atributos", this.getCodigoAtributos());
+		
+		StringSubstitutor stringSubstitutor = new StringSubstitutor(valuesMap);
+		return stringSubstitutor.replace(getTemplate());
 	}
 
 	private String getCodigoAtributos() {
@@ -42,16 +40,16 @@ public class ConfiguracaoPesquisaRequest implements ArquivoCodigo {
 
 	}
 
-	private String getTemplateClasse() {
-		return "package nomePacote;\n"
+	private String getTemplate() {
+		return "package ${nomePacote};\n"
 				+ "\n"
 				+ "import lombok.Getter;\n"
 				+ "import lombok.Setter;\n"
 				+ "\n"
 				+ "@Getter\n"
 				+ "@Setter\n"
-				+ "public class nomeClasse {\n"
-				+ "	atributos\n"
+				+ "public class ${nomeClasse} {\n"
+				+ "	${atributos}\n"
 				+ "}";
 	}
 
@@ -62,6 +60,6 @@ public class ConfiguracaoPesquisaRequest implements ArquivoCodigo {
 
 	@Override
 	public String getCaminhoPacoteClasse() {
-		return getPacoteRequest() + "." + getNomeClasse() + ".java";
+		return NomeCodigoType.REQUEST_PESQUISA.arquivo(nomePacote, nomeEntidade);
 	}
 }

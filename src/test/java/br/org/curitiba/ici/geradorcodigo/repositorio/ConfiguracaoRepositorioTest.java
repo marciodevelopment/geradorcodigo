@@ -19,19 +19,9 @@ class ConfiguracaoRepositorioTest {
 	@Test
 	void getArquivoTest() {
 		ConfiguracaoRepositorio configuracao = new ConfiguracaoRepositorio("br.com.ici.pessoa", "Pessoa");
-		System.out.println(configuracao.getCodigoGerado());
-		
 		assertEquals(codigoRepositorio, configuracao.getCodigoGerado());
 	}
 	
-	
-	@Test
-	void getArquivoTest2() {
-		ConfiguracaoRepositorio configuracao = new ConfiguracaoRepositorio("br.org.curitiba.ici.gtm.pais", "Pais");
-		System.out.println(configuracao.getCodigoGerado());
-		
-		assertEquals(codigoRepositorio, configuracao.getCodigoGerado());
-	}
 	
 	@Test
 	void getPastaTest() {
